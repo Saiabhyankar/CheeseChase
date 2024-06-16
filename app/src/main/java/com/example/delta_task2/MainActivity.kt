@@ -1,5 +1,5 @@
-package com.example.tomandjerry
 
+package com.example.delta_task2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

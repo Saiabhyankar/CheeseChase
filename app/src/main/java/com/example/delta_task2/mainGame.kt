@@ -1,5 +1,6 @@
 package com.example.delta_task2
 
+import android.media.MediaPlayer
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -48,6 +49,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,55 +60,58 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 @Composable
-fun mainGame(navigate:()->Unit){
+fun mainGame(navigate:()->Unit) {
     val customFontFamily = FontFamily(
         Font(R.font.cavet, FontWeight.Normal),
         Font(R.font.cavet, FontWeight.Bold)
     )
-    var painter1= painterResource(id = R.drawable.tomwin)
-    var painter2= painterResource(id = R.drawable.jerrywin)
-    var initialRadius=50f
-
-    if(track.value==0 && initialTrack.value==1 ){
-        xc.value=-375f
-
+    var painter1 = painterResource(id = R.drawable.tomwin)
+    var painter2 = painterResource(id = R.drawable.jerrywin)
+    var initialRadius = 50f
+    var context1 = LocalContext.current
+    var context2 = LocalContext.current
+    var jumpSound = remember { MediaPlayer.create(context1, R.raw.jump_jerry) }
+    var hitSound = remember {
+        MediaPlayer.create(context2, R.raw.obstacle_hit)
     }
-    else if(track.value==2 && initialTrack.value==1 ){
-        xc.value=375f
-    }
-    else if(track.value==1){
-        xc.value=0f
+    if (track.value == 0 && initialTrack.value == 1) {
+        xc.value = -375f
+
+    } else if (track.value == 2 && initialTrack.value == 1) {
+        xc.value = 375f
+    } else if (track.value == 1) {
+        xc.value = 0f
     }
     val delayTime = 10L
-    var moveStepJerry=100f
-    var targetJerry =-50f
+    var moveStepJerry = 100f
+    var targetJerry = -50f
     LaunchedEffect(gameContinue.value) {
         delay(1000L)
-        while (centreJerry.value >= targetJerry && gameContinue.value ) {
+        while (centreJerry.value >= targetJerry && gameContinue.value) {
             centreJerry.value -= moveStepJerry
             delay(delayTime)
         }
     }
-    val moveStepTom=10f
-    var targetTom =750f
-    var targetObstacle =550f
+    val moveStepTom = 10f
+    var targetTom = 750f
+    var targetObstacle = 550f
     LaunchedEffect(gameContinue.value) {
         delay(1000L)
-        while (centreTom.value <= targetTom && gameContinue.value&& counter.value<=1) {
-            centreTom.value+= moveStepTom
+        while (centreTom.value <= targetTom && gameContinue.value && counter.value <= 1) {
+            centreTom.value += moveStepTom
             delay(delayTime)
-            if(centreTom.value==targetTom && gameContinue.value && counter.value<=1){
-                targetTom*=2
+            if (centreTom.value == targetTom && gameContinue.value && counter.value <= 1) {
+                targetTom *= 2
             }
         }
     }
     LaunchedEffect(gameContinue.value) {
         delay(1000L)
-        while (centreObstale.value<= targetObstacle && gameContinue.value) {
-            centreObstale.value+= moveStepTom
+        while (centreObstale.value <= targetObstacle && gameContinue.value) {
+            centreObstale.value += moveStepTom
             delay(delayTime)
-            if(centreObstale.value==targetObstacle){
-                targetObstacle*=2
+            if (centreObstale.value == targetObstacle) {
+                targetObstacle *= 2
             }
         }
 
@@ -117,68 +122,76 @@ fun mainGame(navigate:()->Unit){
         animationSpec = tween(durationMillis = 200)
     )
     Surface(
-        color = Color(54,173,207,255),
+        color = Color(54, 173, 207, 255),
         modifier = Modifier.fillMaxWidth()
-    ){}
+    ) {}
 
-    Box(modifier = Modifier
-        .fillMaxSize()){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
-        LazyVerticalGrid(columns =GridCells.Fixed(3) ,
-            modifier = Modifier.fillMaxSize()) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier.fillMaxSize()
+        ) {
             items(3) {
-                Box(modifier = Modifier
-                    .fillMaxHeight()
-                    .height(1000.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .height(1000.dp)
+                )
                 {
-                    Button(onClick = {
-                        initialTrack.value=track.value
-                        track.value=it
-                        if(initialTrack.value== track.value){
-                            count.value=1
-                        }
-                        else{
-                            count.value=0
-                        }
-                    },
+                    Button(
+                        onClick = {
+                            initialTrack.value = track.value
+                            track.value = it
+                            if (initialTrack.value == track.value) {
+                                count.value = 1
+                            } else {
+                                count.value = 0
+                            }
+                        },
                         modifier = Modifier
                             .height(5000.dp)
                             .width(100.dp)
                             .offset(x = 10.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(238,244,241,255)),
-                        shape = RectangleShape) {
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(
+                                238,
+                                244,
+                                241,
+                                255
+                            )
+                        ),
+                        shape = RectangleShape
+                    ) {
                     }
 
                 }
             }
         }
     }
-    Box (modifier = Modifier
-        .fillMaxHeight()
-        .padding(50.dp)
-        .offset(y = 200.dp),
-        contentAlignment = Alignment.Center){
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(50.dp)
+            .offset(y = 200.dp),
+        contentAlignment = Alignment.Center
+    ) {
 
-        Canvas(modifier = Modifier
-            .padding(1.dp)) {
-            drawCircle(
-                color = Color.Red,
-                radius = animatedRadius,
-                center = Offset(xc.value,centreJerry.value)
-            )
-            drawCircle(
-                color = Color.Black,
-                radius = 90f,
-                center = Offset(xc.value,centreTom.value
-                )
-            )
-            for(i in 1..100) {
+        Canvas(
+            modifier = Modifier
+                .padding(1.dp)
+        ) {
+
+            for (i in 1..100) {
                 drawRect(
                     color = Color.Blue,
-                    topLeft = Offset(-50f, centreObstale.value- (350*(2*i +1)).toFloat()),
+                    topLeft = Offset(-50f, centreObstale.value - (350 * (2 * i + 1)).toFloat()),
                     size = Size(100f, 100f),
                 )
-                if(i%2==0) {
+                if (i % 2 == 0) {
                     drawRect(
                         color = Color.Blue,
                         topLeft = Offset(-425f, centreObstale.value - (700 * i).toFloat()),
@@ -187,75 +200,119 @@ fun mainGame(navigate:()->Unit){
                 }
                 drawRect(
                     color = Color.Blue,
-                    topLeft = Offset(320f, centreObstale.value - (700*i).toFloat()),
+                    topLeft = Offset(320f, centreObstale.value - (700 * i).toFloat()),
                     size = Size(100f, 100f),
                 )
-                if(track.value==0 && (centreJerry.value == centreObstale.value - (700*i).toFloat()) && i%2==0 && !counterUpdated.value && gameContinue.value ){
-                    counter.value+=1
-                    counterUpdated.value=true
+                if (track.value == 1 && centreObstale.value - (350 * (2 * i + 1)).toFloat() - centreJerry.value > 40f && count.value == 1) {
+                    count.value = 1
+                    isJump.value = true
+                } else if (track.value == 1 && centreObstale.value - (350 * (2 * i + 1)).toFloat() - centreJerry.value > -40f && count.value == 1) {
+                    count.value = 0
+                    isJump.value = false
                 }
-                else if(track.value==1 && (centreJerry.value== centreObstale.value - (350*(2*i +1)).toFloat()) && !counterUpdated.value && gameContinue.value){
-                    counter.value+=1
-                    counterUpdated.value=true
+                if (track.value == 0 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > 40f && count.value == 1) {
+                    count.value = 1
+                    isJump.value = true
+                } else if (track.value == 0 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > -40f && count.value == 1) {
+                    count.value = 0
+                    isJump.value = false
                 }
-                else if(track.value==2 && (centreJerry.value==centreObstale.value - (700*i).toFloat()) && !counterUpdated.value && gameContinue.value ){
-                    counter.value+=1
-                    counterUpdated.value=true
+                if (track.value == 2 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > 40f && count.value == 1) {
+                    count.value = 1
+                    isJump.value = true
+                } else if (track.value == 2 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > -40f && count.value == 1) {
+                    count.value = 0
+                    isJump.value = false
                 }
+
+                if (track.value == 0 && (centreJerry.value == centreObstale.value - (700 * i).toFloat()) && i % 2 == 0 && !counterUpdated.value && gameContinue.value && !isJump.value) {
+                    counter.value += 1
+                    counterUpdated.value = true
+                } else if (track.value == 1 && (centreJerry.value == centreObstale.value - (350 * (2 * i + 1)).toFloat()) && !counterUpdated.value && gameContinue.value && !isJump.value) {
+                    counter.value += 1
+                    counterUpdated.value = true
+                } else if (track.value == 2 && (centreJerry.value == centreObstale.value - (700 * i).toFloat()) && !counterUpdated.value && gameContinue.value && !isJump.value) {
+                    counter.value += 1
+                    counterUpdated.value = true
+                }
+
             }
+
+            drawCircle(
+                color = Color.Red,
+                radius = animatedRadius,
+                center = Offset(xc.value, centreJerry.value)
+            )
+            drawCircle(
+                color = Color.Black,
+                radius = 90f,
+                center = Offset(
+                    xc.value, centreTom.value
+                )
+            )
         }
-        if(counter.value==1 && counterUpdated.value){
-            centreTom.value=300f
-            gameContinue.value=true
-            if(counterUpdated.value==true){
-                counterUpdated.value=false
+            if (count.value == 1) {
+                jumpSound.start()
             }
-        }
-        else if(counter.value==2){
-            centreTom.value=centreJerry.value+50f
-            gameContinue.value=false
-            AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
-                text = {
-                    Column(){
-                        Text(text = "GameOver\nTom wins")
-                        Image(painter = painter1, contentDescription = "tomwin",
-                            modifier= Modifier
-                                .size(height = 80.dp, width = 100.dp)
-                                .offset(80.dp, 0.dp))
-                        Box {
-                            PlayAgain()
+            if (counter.value == 1 && counterUpdated.value) {
+                centreTom.value = 300f
+                gameContinue.value = true
+                if (counterUpdated.value == true) {
+                    counterUpdated.value = false
+                }
+            } else if (counter.value == 2) {
+                centreTom.value = centreJerry.value + 50f
+                gameContinue.value = false
+                AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
+                    text = {
+                        Column() {
+                            Text(text = "GameOver\nTom wins")
+                            Image(
+                                painter = painter1, contentDescription = "tomwin",
+                                modifier = Modifier
+                                    .size(height = 80.dp, width = 100.dp)
+                                    .offset(80.dp, 0.dp)
+                            )
+                            Box {
+                                PlayAgain()
+                            }
                         }
-                    }
 
 
-                })
-        }
-        else if(centreTom.value-centreJerry.value>4000f){
-            gameContinue.value=false
-            AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
-                text = {
-                    Column(){
-                        Text(text = "GameOver\nJerry wins",
-                            fontFamily = customFontFamily
-                        )
-                        Image(painter = painter2, contentDescription = "jerryWin",
-                            modifier= Modifier
-                                .size(height = 80.dp, width = 100.dp)
-                                .offset(80.dp, 0.dp))
-                        Box {
-                            PlayAgain()
+                    })
+            } else if (centreTom.value - centreJerry.value > 4000f) {
+                gameContinue.value = false
+                AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
+                    text = {
+                        Column() {
+                            Text(
+                                text = "GameOver\nJerry wins",
+                                fontFamily = customFontFamily
+                            )
+                            Image(
+                                painter = painter2, contentDescription = "jerryWin",
+                                modifier = Modifier
+                                    .size(height = 80.dp, width = 100.dp)
+                                    .offset(80.dp, 0.dp)
+                            )
+                            Box {
+                                PlayAgain()
+                            }
                         }
-                    }
 
-                })
-        }
+                    })
+            }
 
-        Column(modifier = Modifier
-            .offset(250.dp, -250.dp)
-            .size(height = 80.dp, width = 180.dp)){
-            Card(shape = RoundedCornerShape(10.dp)){
-                Text(text = (counter.value).toString())
+            Column(
+                modifier = Modifier
+                    .offset(250.dp, -250.dp)
+                    .size(height = 80.dp, width = 180.dp)
+            ) {
+                Card(shape = RoundedCornerShape(10.dp)) {
+                    Text(text = (count.value).toString())
+                }
             }
         }
     }
-}
+
+

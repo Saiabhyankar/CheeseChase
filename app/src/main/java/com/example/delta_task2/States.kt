@@ -29,3 +29,5 @@ var centreJerry=
     mutableStateOf(120f)
 var ExitConfirm=
     mutableStateOf(false)
+var isJump =
+    mutableStateOf(false)
