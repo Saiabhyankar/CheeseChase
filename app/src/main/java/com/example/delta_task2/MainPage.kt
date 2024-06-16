@@ -34,14 +34,18 @@ fun MainPage(navigateToGame:()->Unit){
     Box (modifier = Modifier
         .padding(50.dp)
         .size(350.dp)
-        .offset(10.dp,200.dp)
+        .offset(10.dp, 200.dp)
     ){
-        Image(painter = image1, contentDescription = "GameTheme",
-            modifier = Modifier
-                .size(250.dp))
+        Column(Modifier.fillMaxSize()) {
+
+            Image(painter = image1, contentDescription = "GameTheme",
+                modifier = Modifier
+                    .size(250.dp))
+            writeHighScore()
+        }
     }
     Box(contentAlignment = Alignment.Center,
-        modifier=Modifier
+        modifier= Modifier
             .padding(100.dp)
             .size(500.dp)){
         Column (){
@@ -53,7 +57,7 @@ fun MainPage(navigateToGame:()->Unit){
             )
             Button(onClick = { navigateToGame() },
                 modifier = Modifier
-                    .offset(-5.dp,300.dp)
+                    .offset(-5.dp, 300.dp)
                     .size(height = 60.dp, width = 160.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta) ) {
                 Text("Start",

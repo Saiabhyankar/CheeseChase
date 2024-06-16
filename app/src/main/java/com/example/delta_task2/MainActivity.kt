@@ -1,4 +1,3 @@
-
 package com.example.delta_task2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -40,9 +39,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Surface(
-
-                modifier = Modifier.fillMaxSize()
-                ,
+                modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
 
@@ -56,10 +53,11 @@ class MainActivity : ComponentActivity() {
                     composable("secondscreen") {
                         mainGame {
                             navController.navigate(
-                                " firscreen"
+                                "firstscreen"
                             )
                         }
                     }
+
                 }
             }
 

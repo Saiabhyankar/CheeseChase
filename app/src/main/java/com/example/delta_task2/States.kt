@@ -27,7 +27,11 @@ var counterUpdated=
     mutableStateOf(false)
 var centreJerry=
     mutableStateOf(120f)
-var ExitConfirm=
-    mutableStateOf(false)
 var isJump =
+    mutableStateOf(true)
+var jumpTrack=
+    mutableStateOf(false)
+var jumpCounter=
+    mutableStateOf(0)
+var highScoreAlert=
     mutableStateOf(false)
