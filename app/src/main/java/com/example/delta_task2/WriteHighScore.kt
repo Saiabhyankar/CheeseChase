@@ -21,11 +21,11 @@ fun writeHighScore(){
     }
     if(highScoreAlert.value){
         AlertDialog(onDismissRequest = { highScoreAlert.value=false }, confirmButton = { /*TODO*/ },
-            modifier = Modifier.size(400.dp),
+            modifier = Modifier.size(200.dp),
             text = {
                 Column (){
                     Row(){
-                        Text("Winner ")
+                        Text("Winner")
                         Spacer(modifier =Modifier.padding(16.dp) )
                         Text("Score")
                     }

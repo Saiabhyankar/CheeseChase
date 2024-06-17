@@ -35,3 +35,13 @@ var jumpCounter=
     mutableStateOf(0)
 var highScoreAlert=
     mutableStateOf(false)
+var trapYCoord =
+    mutableStateOf(-700f)
+var gamePause=
+    mutableStateOf(false)
+var conditionCheck=
+    mutableStateOf(0 )
+var powerUp=
+    mutableStateOf(-40f)
+var targetTrap =
+    mutableStateOf(1440f)

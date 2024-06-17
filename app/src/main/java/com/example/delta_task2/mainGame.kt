@@ -88,27 +88,18 @@ fun mainGame(navigate:()->Unit) {
         xc.value = 0f
     }
     LaunchedEffect(gameContinue.value) {
-        while (gameContinue.value) {
+        while (gameContinue.value && !gamePause.value) {
             delay(1000L)
             gameScore.value += 15
         }
     }
-    val delayTime = 10L
-    var moveStepJerry = 100f
-    var targetJerry = -50f
-//    LaunchedEffect(gameContinue.value) {
-//        delay(1000L)
-//        while (centreJerry.value >= targetJerry && gameContinue.value) {
-//            centreJerry.value -= moveStepJerry
-//            delay(delayTime)
-//        }
-//    }
+    var delayTime = 10L
     val moveStepTom = 10f
     var targetTom = 750f
-    var targetObstacle = 550f
+
     LaunchedEffect(gameContinue.value) {
         delay(1000L)
-        while (centreTom.value <= targetTom && gameContinue.value && counter.value <= 1) {
+        while (centreTom.value <= targetTom && gameContinue.value && counter.value <= 1 ) {
             centreTom.value += moveStepTom
             delay(delayTime)
             if (centreTom.value == targetTom && gameContinue.value && counter.value <= 1) {
@@ -116,17 +107,7 @@ fun mainGame(navigate:()->Unit) {
             }
         }
     }
-    LaunchedEffect(gameContinue.value) {
-        delay(1000L)
-        while (centreObstale.value <= targetObstacle && gameContinue.value) {
-            centreObstale.value += moveStepTom
-            delay(delayTime)
-            if (centreObstale.value == targetObstacle) {
-                targetObstacle *= 2
-            }
-        }
-
-    }
+    ObstacleMove()
     val targetRadius = if (count.value == 1) 100f else initialRadius
     val animatedRadius by animateFloatAsState(
         targetValue = targetRadius,
@@ -183,6 +164,7 @@ fun mainGame(navigate:()->Unit) {
             }
         }
     }
+    Jump()
     Box(
         modifier = Modifier
             .fillMaxHeight()
@@ -197,11 +179,13 @@ fun mainGame(navigate:()->Unit) {
         ) {
 
             for (i in 1..100) {
-                drawRect(
-                    color = Color.Blue,
-                    topLeft = Offset(-50f, centreObstale.value - (350 * (2 * i + 1)).toFloat()),
-                    size = Size(100f, 100f),
-                )
+                if(i%2==0||i%3==0 || i%4==0) {
+                    drawRect(
+                        color = Color.Blue,
+                        topLeft = Offset(-50f, centreObstale.value - (350 * (2 * i + 1)).toFloat()),
+                        size = Size(100f, 100f),
+                    )
+                }
                 if (i % 2 == 0) {
                     drawRect(
                         color = Color.Blue,
@@ -209,41 +193,12 @@ fun mainGame(navigate:()->Unit) {
                         size = Size(100f, 100f),
                     )
                 }
-                drawRect(
-                    color = Color.Blue,
-                    topLeft = Offset(320f, centreObstale.value - (700 * i).toFloat()),
-                    size = Size(100f, 100f),
-                )
-                if (track.value == 1 && centreObstale.value - (350 * (2 * i + 1)).toFloat() - centreJerry.value > 40f && count.value == 1) {
-                    count.value = 1
-
-                } else if (track.value == 1 && centreObstale.value - (350 * (2 * i + 1)).toFloat() - centreJerry.value > -30f && count.value == 1) {
-                    count.value = 0
-                    isJump.value=false
-                }
-                if (track.value == 0 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > 40f && count.value == 1) {
-                    count.value = 1
-
-                } else if (track.value == 0 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > -30f && count.value == 1) {
-                    count.value = 0
-                    isJump.value = false
-                }
-                if (track.value == 2 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > 40f && count.value == 1) {
-                    count.value = 1
-
-                } else if (track.value == 2 && centreObstale.value - (700 * i).toFloat() - centreJerry.value > -30f && count.value == 1) {
-                    count.value = 0
-                    isJump.value = false
-                }
-                if (track.value == 0 && (centreJerry.value == centreObstale.value - (700 * i).toFloat()) && i % 2 == 0 && !counterUpdated.value && gameContinue.value ) {
-                    counter.value += 1
-                    counterUpdated.value = true
-                } else if (track.value == 1 && (centreJerry.value == centreObstale.value - (350 * (2 * i + 1)).toFloat()) && !counterUpdated.value && gameContinue.value ) {
-                    counter.value += 1
-                    counterUpdated.value = true
-                } else if (track.value == 2 && (centreJerry.value == centreObstale.value - (700 * i).toFloat()) && !counterUpdated.value && gameContinue.value   ) {
-                    counter.value += 1
-                    counterUpdated.value = true
+                if(i%3==0) {
+                    drawRect(
+                        color = Color.Blue,
+                        topLeft = Offset(320f, centreObstale.value - (700 * i).toFloat()),
+                        size = Size(100f, 100f),
+                    )
                 }
 
             }
@@ -260,7 +215,9 @@ fun mainGame(navigate:()->Unit) {
                     xc.value, centreTom.value
                 )
             )
+
         }
+        Trap()
         if(!isJump.value){
             jumpCounter.value=1
         }
@@ -271,12 +228,14 @@ fun mainGame(navigate:()->Unit) {
                 jumpTrack.value = false
                 isJump.value = true
                 counterUpdated.value=false
+
             }
             else if(counter.value==0  && jumpTrack.value) {
                 counter.value = 0
                 jumpTrack.value = false
                 isJump.value = true
                 counterUpdated.value=false
+
             }
         }
         if (count.value == 1) {
@@ -296,96 +255,145 @@ fun mainGame(navigate:()->Unit) {
                 centreTom.value = centreJerry.value + 50f
                 gameContinue.value = false
                 writeToSharedPref(LocalContext.current,"HighScore",gameScore.value.toString(),"Cheese Chase")
-                AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
-                    modifier = Modifier
-                        .size(500.dp),
-                    text = {
-                        Column {
-                            Text(
-                                text = "GameOver\n\nTom wins",
-                                fontFamily = customFontFamily,
-                                modifier = Modifier
-                                    .offset(70.dp,-10.dp),
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier
-                                .padding(16.dp))
-                            Image(
-                                painter = painter1, contentDescription = "tomWin",
-                                modifier = Modifier
-                                    .size(height = 120.dp, width = 120.dp)
-                                    .offset(80.dp, -40.dp)
-                            )
-                            Spacer(modifier = Modifier.padding(16.dp))
-                            Box(modifier = Modifier
-                                .offset(50.dp, -20.dp)
-                                .size(height = 500.dp, width = 250.dp)) {
-                                Column(Modifier.fillMaxSize()) {
-                                    PlayAgain()
-                                    Spacer(modifier = Modifier.padding(16.dp))
-                                    Button(onClick = {navigate ()},
-                                        modifier = Modifier
-                                            .size(height=60.dp,width=180.dp)) {
-                                        Text("Home",
-                                            fontSize = 24.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
+                if(!gameContinue.value) {
+                    AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
+                        modifier = Modifier
+                            .size(500.dp),
+                        text = {
+                            Column {
+                                Text(
+                                    text = "GameOver\n\nTom wins",
+                                    fontFamily = customFontFamily,
+                                    modifier = Modifier
+                                        .offset(70.dp, -10.dp),
+                                    fontSize = 32.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                )
+                                Image(
+                                    painter = painter1, contentDescription = "tomWin",
+                                    modifier = Modifier
+                                        .size(height = 120.dp, width = 120.dp)
+                                        .offset(80.dp, -40.dp)
+                                )
+                                Spacer(modifier = Modifier.padding(16.dp))
+                                Box(
+                                    modifier = Modifier
+                                        .offset(50.dp, -20.dp)
+                                        .size(height = 500.dp, width = 250.dp)
+                                ) {
+                                    Column(Modifier.fillMaxSize()) {
+                                        PlayAgain()
+                                        Spacer(modifier = Modifier.padding(16.dp))
+                                        Button(
+                                            onClick = { navigate()
+                                                gameContinue.value=true
+                                                counter.value=0
+                                                centreTom.value=300f
+                                                centreObstale.value=120f
+                                                centreJerry.value=120f
+                                                track.value=1
+                                                initialTrack.value=1
+                                                count.value=0
+                                                isJump.value=true
+                                                counterUpdated.value=false
+                                                xc.value=0f
+                                                jumpTrack.value=false
+                                                gameScore.value=0
+                                                jumpCounter.value=0},
 
+                                            modifier = Modifier
+                                                .size(height = 60.dp, width = 180.dp)
+                                        ) {
+                                            Text(
+                                                "Home",
+                                                fontSize = 24.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+
+                                        }
                                     }
+
                                 }
-
                             }
-                        }
 
 
-                    })
-            } else if (centreTom.value - centreJerry.value > 4000f) {
+                        })
+                }
+            } else if (centreTom.value - centreJerry.value > 10000f) {
                 gameContinue.value = false
                 writeToSharedPref(LocalContext.current,"HighScore",gameScore.value.toString(),"Cheese Chase")
-                AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
-                    modifier = Modifier
-                        .size(500.dp),
-                    text = {
-                        Column {
-                            Text(
-                                text = "GameOver\n\nJerry wins",
-                                fontFamily = customFontFamily,
-                                modifier = Modifier
-                                    .offset(70.dp,-10.dp),
-                                fontSize = 40.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier
-                                .padding(16.dp))
-                            Image(
-                                painter = painter2, contentDescription = "jerryWin",
-                                modifier = Modifier
-                                    .size(height = 120.dp, width = 120.dp)
-                                    .offset(80.dp, -40.dp)
-                            )
-                            Spacer(modifier = Modifier.padding(16.dp))
-                            Box(modifier = Modifier
-                                .offset(50.dp, -20.dp)
-                                .size(height = 500.dp, width = 250.dp)) {
-                                Column(Modifier.fillMaxSize()) {
-                                    PlayAgain()
-                                    Spacer(modifier = Modifier.padding(16.dp))
-                                    Button(onClick = { navigate()},
-                                        modifier = Modifier
-                                            .size(height=60.dp,width=180.dp)) {
-                                        Text("Home",
-                                            fontSize = 24.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
+                if(!gameContinue.value) {
+                    AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
+                        modifier = Modifier
+                            .size(500.dp),
+                        text = {
+                            Column {
+                                Text(
+                                    text = "GameOver\n\nJerry wins",
+                                    fontFamily = customFontFamily,
+                                    modifier = Modifier
+                                        .offset(70.dp, -10.dp),
+                                    fontSize = 40.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                )
+                                Image(
+                                    painter = painter2, contentDescription = "jerryWin",
+                                    modifier = Modifier
+                                        .size(height = 120.dp, width = 120.dp)
+                                        .offset(80.dp, -40.dp)
+                                )
+                                Spacer(modifier = Modifier.padding(16.dp))
+                                Box(
+                                    modifier = Modifier
+                                        .offset(50.dp, -20.dp)
+                                        .size(height = 500.dp, width = 250.dp)
+                                ) {
+                                    Column(Modifier.fillMaxSize()) {
+                                        PlayAgain()
+                                        Spacer(modifier = Modifier.padding(16.dp))
+                                        Button(
+                                            onClick = {
+                                                navigate()
+                                                gameContinue.value = true
+                                                counter.value = 0
+                                                centreTom.value = 300f
+                                                centreObstale.value = 120f
+                                                centreJerry.value = 120f
+                                                track.value = 1
+                                                initialTrack.value = 1
+                                                count.value = 0
+                                                isJump.value = true
+                                                counterUpdated.value = false
+                                                xc.value = 0f
+                                                jumpTrack.value = false
+                                                gameScore.value = 0
+                                                jumpCounter.value = 0
+                                            },
+                                            modifier = Modifier
+                                                .size(height = 60.dp, width = 180.dp)
+                                        ) {
+                                            Text(
+                                                "Home",
+                                                fontSize = 24.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
 
+                                        }
                                     }
+
                                 }
-
                             }
-                        }
 
-                    })
+                        })
+                }
             }
 
             Column(

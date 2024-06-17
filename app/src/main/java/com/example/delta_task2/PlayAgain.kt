@@ -27,6 +27,10 @@ fun PlayAgain(){
         jumpTrack.value=false
         gameScore.value=0
         jumpCounter.value=0
+        trapYCoord.value=-640f
+        gamePause.value=false
+        powerUp.value=-40f
+        targetTrap.value=1440f
     },
         modifier = Modifier
             .size(height=60.dp,width=180.dp)){
