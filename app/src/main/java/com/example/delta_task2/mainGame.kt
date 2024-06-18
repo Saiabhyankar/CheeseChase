@@ -108,6 +108,7 @@ fun mainGame(navigate:()->Unit) {
         }
     }
     ObstacleMove()
+    //MoveJerry()
     val targetRadius = if (count.value == 1) 100f else initialRadius
     val animatedRadius by animateFloatAsState(
         targetValue = targetRadius,
@@ -172,6 +173,10 @@ fun mainGame(navigate:()->Unit) {
             .offset(y = 200.dp),
         contentAlignment = Alignment.Center
     ) {
+        Column(){
+            Trap()
+            //PowerUps()
+        }
 
         Canvas(
             modifier = Modifier
@@ -179,7 +184,7 @@ fun mainGame(navigate:()->Unit) {
         ) {
 
             for (i in 1..100) {
-                if(i%2==0||i%3==0 || i%4==0) {
+                if(i%2==0||i%3==0 ) {
                     drawRect(
                         color = Color.Blue,
                         topLeft = Offset(-50f, centreObstale.value - (350 * (2 * i + 1)).toFloat()),
@@ -193,7 +198,7 @@ fun mainGame(navigate:()->Unit) {
                         size = Size(100f, 100f),
                     )
                 }
-                if(i%3==0) {
+                if(i%2==0) {
                     drawRect(
                         color = Color.Blue,
                         topLeft = Offset(320f, centreObstale.value - (700 * i).toFloat()),
@@ -217,7 +222,7 @@ fun mainGame(navigate:()->Unit) {
             )
 
         }
-        Trap()
+
         if(!isJump.value){
             jumpCounter.value=1
         }
@@ -228,14 +233,6 @@ fun mainGame(navigate:()->Unit) {
                 jumpTrack.value = false
                 isJump.value = true
                 counterUpdated.value=false
-
-            }
-            else if(counter.value==0  && jumpTrack.value) {
-                counter.value = 0
-                jumpTrack.value = false
-                isJump.value = true
-                counterUpdated.value=false
-
             }
         }
         if (count.value == 1) {
@@ -303,7 +300,12 @@ fun mainGame(navigate:()->Unit) {
                                                 xc.value=0f
                                                 jumpTrack.value=false
                                                 gameScore.value=0
-                                                jumpCounter.value=0},
+                                                jumpCounter.value=0
+                                                trapYCoord.value=-700f
+                                                gamePause.value=false
+                                                powerUp.value=-40f
+                                                targetTrap.value=1440f
+                                                conditionCheck.value=0},
 
                                             modifier = Modifier
                                                 .size(height = 60.dp, width = 180.dp)
@@ -362,20 +364,25 @@ fun mainGame(navigate:()->Unit) {
                                         Button(
                                             onClick = {
                                                 navigate()
-                                                gameContinue.value = true
-                                                counter.value = 0
-                                                centreTom.value = 300f
-                                                centreObstale.value = 120f
-                                                centreJerry.value = 120f
-                                                track.value = 1
-                                                initialTrack.value = 1
-                                                count.value = 0
-                                                isJump.value = true
-                                                counterUpdated.value = false
-                                                xc.value = 0f
-                                                jumpTrack.value = false
-                                                gameScore.value = 0
-                                                jumpCounter.value = 0
+                                                gameContinue.value=true
+                                                counter.value=0
+                                                centreTom.value=300f
+                                                centreObstale.value=120f
+                                                centreJerry.value=120f
+                                                track.value=1
+                                                initialTrack.value=1
+                                                count.value=0
+                                                isJump.value=true
+                                                counterUpdated.value=false
+                                                xc.value=0f
+                                                jumpTrack.value=false
+                                                gameScore.value=0
+                                                jumpCounter.value=0
+                                                trapYCoord.value=-700f
+                                                gamePause.value=false
+                                                powerUp.value=-40f
+                                                targetTrap.value=1440f
+                                                conditionCheck.value=0
                                             },
                                             modifier = Modifier
                                                 .size(height = 60.dp, width = 180.dp)
@@ -406,7 +413,7 @@ fun mainGame(navigate:()->Unit) {
                         .size(height = 60.dp, width = 60.dp)
                         .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
                     colors = CardDefaults.cardColors(Color.White)) {
-                    Text(text = (gameScore.value).toString(),
+                    Text(text = (counter.value).toString(),
                         fontSize = 20.sp,
                         modifier=Modifier
                             .offset(20.dp,15.dp))

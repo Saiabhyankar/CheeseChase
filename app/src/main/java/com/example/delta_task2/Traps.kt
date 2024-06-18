@@ -1,6 +1,7 @@
 package com.example.delta_task2
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
@@ -23,8 +25,14 @@ import kotlinx.coroutines.delay
 @Composable
 fun Trap(){
     fun checkTrapCollision(){
-        if (((centreJerry.value == trapYCoord.value+50f && track.value==1)||(centreJerry.value == trapYCoord.value+150f && track.value==0)) && conditionCheck.value==0) {
-            gamePause.value = true
+        for( i in 0..2) {
+            if ((((centreJerry.value == (trapYCoord.value - 650f - (500 * 4* i).toFloat()) && track.value == 1) || (centreJerry.value == trapYCoord.value + 10f - (400 * 3* i).toFloat()) && track.value == 0)) && conditionCheck.value == 0) {
+                gamePause.value = true
+                counter.value += 1
+            }
+            if((trapYCoord.value - 650f - (500 * 4* i).toFloat()== centreObstale.value+100f)||(trapYCoord.value + 30f - (400 * 3* i).toFloat()== centreObstale.value)){
+                trapYCoord.value+=50f
+            }
         }
 
         if (gamePause.value) {
@@ -34,28 +42,42 @@ fun Trap(){
         }
     }
     var trap= painterResource(id = R.drawable.traps)
-    var delayTime=45L
+    var delayTime=30L
 
     LaunchedEffect(gameContinue.value) {
-            delay(500L)
+                delay(300L)
             while(trapYCoord.value<=targetTrap.value&& gameContinue.value){
+                delay(0L)
                 trapYCoord.value+=10f
+                checkTrapCollision()
+                delay(delayTime)
                 if(targetTrap.value== trapYCoord.value){
                     targetTrap.value*=2
-                    delayTime-=1
                 }
-                delay(delayTime)
                 checkTrapCollision()
             }
     }
     Column(){
-        Image(painter = trap, contentDescription ="Trap",
-            modifier= Modifier
-                .size(60.dp)
-                .offset(y = trapYCoord.value.dp))
-        Image(painter = trap, contentDescription = "Trap",
-            modifier = Modifier.size(60.dp)
-                .offset (-130.dp, (trapYCoord.value+100).dp))
+        for(i in 0..2) {
+            Image(
+                painter = trap, contentDescription = "Trap",
+                modifier = Modifier
+                    .size(60.dp)
+                    .offset(y = (trapYCoord.value - 500 - (500 * 4* i)).dp)
+            )
+            Image(
+                painter = trap, contentDescription = "Trap",
+                modifier = Modifier
+                    .size(60.dp)
+                    .offset(-130.dp, (trapYCoord.value + 100 - (400 * 3* i)).dp)
+            )
+            Image(
+                painter = trap, contentDescription = "Trap",
+                modifier = Modifier
+                    .size(60.dp)
+                    .offset(130.dp, y = (trapYCoord.value - 500 - (600 *2*i)).dp)
+            )
+        }
     }
 
 }

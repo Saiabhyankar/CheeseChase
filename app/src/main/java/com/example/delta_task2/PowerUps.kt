@@ -20,14 +20,14 @@ fun PowerUps(){
     var targetPowerUp by remember {
         mutableStateOf(1440f)
     }
-    LaunchedEffect(gameContinue.value, gamePause.value) {
-        delay(1000)
-        while(powerUp.value<=targetPowerUp && !gamePause.value){
-            powerUp.value+=10f
-            delay(50L)
-
-        }
-    }
+//    LaunchedEffect(gameContinue.value, gamePause.value) {
+//        delay(1000)
+//        while(powerUp.value<=targetPowerUp && !gamePause.value){
+//            powerUp.value+=10f
+//            delay(50L)
+//
+//        }
+//    }
     Image(painter = powerUps, contentDescription = "PowerUp",
         modifier = Modifier
             .offset(y=powerUp.value.dp)

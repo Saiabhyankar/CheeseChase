@@ -5,10 +5,10 @@ fun checkCollision(){
         if (track.value == 0 && (centreJerry.value == centreObstale.value - (700 * i).toFloat()+100f) && i % 2 == 0 && !counterUpdated.value && gameContinue.value) {
             counter.value += 1
             counterUpdated.value = true
-        } else if (track.value == 1 && (centreJerry.value == centreObstale.value - (350 * (2 * i + 1)).toFloat()+100f) && (i%2==0||i % 3 == 0 || i % 4 == 0) && !counterUpdated.value && gameContinue.value) {
+        } else if (track.value == 1 && (centreJerry.value == centreObstale.value - (350 * (2 * i + 1)).toFloat()+100f) && (i%2==0||i % 3 == 0) && !counterUpdated.value && gameContinue.value) {
             counter.value += 1
             counterUpdated.value = true
-        } else if (track.value == 2 && (centreJerry.value == centreObstale.value - (700 * i).toFloat()+100f) && i % 3 == 0 && !counterUpdated.value && gameContinue.value) {
+        } else if (track.value == 2 && (centreJerry.value == centreObstale.value - (700 * i).toFloat()+100f)&& i%2==0 && !counterUpdated.value && gameContinue.value) {
             counter.value += 1
             counterUpdated.value = true
         }

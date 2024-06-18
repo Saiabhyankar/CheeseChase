@@ -8,10 +8,11 @@ import kotlinx.coroutines.delay
 fun ObstacleMove(){
     var delayTime=10L
     var moveStepTom=10f
-    var targetObstacle=550f
+    var targetObstacle=1050f
     LaunchedEffect(gameContinue.value) {
-        if (gameContinue.value ) {
-            delay(500L)
+        delay(550L)
+
+
             while (centreObstale.value <= targetObstacle && gameContinue.value) {
                 centreObstale.value += moveStepTom
                 delay(delayTime)
@@ -25,4 +26,3 @@ fun ObstacleMove(){
             }
         }
     }
-}

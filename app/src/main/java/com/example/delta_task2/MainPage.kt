@@ -2,6 +2,7 @@ package com.example.delta_task2
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,6 +29,10 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun MainPage(navigateToGame:()->Unit){
+    val customFontFamily = FontFamily(
+        Font(R.font.playwrite, FontWeight.Normal),
+        Font(R.font.playwrite, FontWeight.Bold)
+    )
     var image1 = painterResource(id = R.drawable.main1)
     Surface(
         color = Color(54,173,207,255),
@@ -33,7 +40,7 @@ fun MainPage(navigateToGame:()->Unit){
     ){}
     Box (modifier = Modifier
         .padding(50.dp)
-        .size(350.dp)
+        .size(550.dp)
         .offset(10.dp, 200.dp)
     ){
         Column(Modifier.fillMaxSize()) {
@@ -42,22 +49,24 @@ fun MainPage(navigateToGame:()->Unit){
                 modifier = Modifier
                     .size(250.dp))
             writeHighScore()
+            Help()
         }
     }
     Box(contentAlignment = Alignment.Center,
         modifier= Modifier
-            .padding(100.dp)
-            .size(500.dp)){
+            .padding(10.dp)){
         Column (){
             Text("Cheese Chase",
                 fontStyle = FontStyle.Italic,
-                fontSize = 24.sp,
+                fontFamily=customFontFamily,
+                fontSize = 32.sp,
                 modifier = Modifier
-                    .offset(0.dp,-250.dp)
+                    .offset(0.dp,-250.dp),
+                color = Color.Magenta
             )
             Button(onClick = { navigateToGame() },
                 modifier = Modifier
-                    .offset(-5.dp, 300.dp)
+                    .offset(25.dp, 300.dp)
                     .size(height = 60.dp, width = 160.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta) ) {
                 Text("Start",
