@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.dp
 fun Help(){
     var painter= painterResource(id = R.drawable.help_icon)
     Column (modifier = Modifier.fillMaxSize()){
-        Button(onClick={},
+        Button(onClick={
+                       helpClick.value=true
+        },
             modifier = Modifier
                 .size(height = 60.dp,width=60.dp)
                 .offset (x=250.dp,y=-500.dp),

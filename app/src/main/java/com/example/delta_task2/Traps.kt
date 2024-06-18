@@ -21,18 +21,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 @Composable
 fun Trap(){
     fun checkTrapCollision(){
+        var numRandom= listOf(1,2,3).random()
         for( i in 0..2) {
-            if ((((centreJerry.value == (trapYCoord.value - 650f - (500 * 4* i).toFloat()) && track.value == 1) || (centreJerry.value == trapYCoord.value + 10f - (400 * 3* i).toFloat()) && track.value == 0)) && conditionCheck.value == 0) {
+            if( ((((centreJerry.value == (trapYCoord.value - 650f - (500 * 4* i).toFloat()) && track.value == 1) || (centreJerry.value == trapYCoord.value + 10f - (400 * 3* i).toFloat()) && track.value == 0)||(centreJerry.value==trapYCoord.value - 500 - (600 *2*i)) && track.value==2)) && conditionCheck.value==0
+                ) {
                 gamePause.value = true
-                counter.value += 1
-            }
-            if((trapYCoord.value - 650f - (500 * 4* i).toFloat()== centreObstale.value+100f)||(trapYCoord.value + 30f - (400 * 3* i).toFloat()== centreObstale.value)){
-                trapYCoord.value+=50f
-            }
+                if(numRandom==2 || numRandom==3) {
+                    counter.value += 1
+                }
+                else{
+                    counter.value=2
+                }
+
+           }
         }
 
         if (gamePause.value) {
@@ -42,7 +48,7 @@ fun Trap(){
         }
     }
     var trap= painterResource(id = R.drawable.traps)
-    var delayTime=30L
+    var delayTime=45L
 
     LaunchedEffect(gameContinue.value) {
                 delay(300L)

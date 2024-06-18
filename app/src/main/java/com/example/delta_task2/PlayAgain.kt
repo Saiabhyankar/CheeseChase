@@ -32,6 +32,9 @@ fun PlayAgain(){
         powerUp.value=-40f
         targetTrap.value=1440f
         conditionCheck.value=0
+        alreadyCounted.value=0
+        targetObstacle.value=1050f
+        delayObstacle.value=10L
     },
         modifier = Modifier
             .size(height=60.dp,width=180.dp)){

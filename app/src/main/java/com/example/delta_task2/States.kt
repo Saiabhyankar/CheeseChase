@@ -45,4 +45,12 @@ var powerUp=
     mutableStateOf(-40f)
 var targetTrap =
     mutableStateOf(1440f)
+var alreadyCounted=
+    mutableStateOf(0)
+var helpClick=
+    mutableStateOf(false)
+var delayObstacle=
+    mutableStateOf(10L)
+var targetObstacle=
+    mutableStateOf(1050f)
 

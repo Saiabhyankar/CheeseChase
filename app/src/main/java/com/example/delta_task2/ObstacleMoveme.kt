@@ -6,21 +6,20 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ObstacleMove(){
-    var delayTime=10L
+
     var moveStepTom=10f
-    var targetObstacle=1050f
+
     LaunchedEffect(gameContinue.value) {
         delay(550L)
 
-
-            while (centreObstale.value <= targetObstacle && gameContinue.value) {
+            while (centreObstale.value <= targetObstacle.value && gameContinue.value) {
                 centreObstale.value += moveStepTom
-                delay(delayTime)
+                delay(delayObstacle.value)
                 checkCollision()
-                if (centreObstale.value == targetObstacle) {
-                    targetObstacle *= 2
-                    if (delayTime > 6) {
-                        delayTime -= 1
+                if (centreObstale.value == targetObstacle.value) {
+                    targetObstacle.value *= 2
+                    if (delayObstacle.value >=5) {
+                        delayObstacle.value -= 1
                     }
                 }
             }

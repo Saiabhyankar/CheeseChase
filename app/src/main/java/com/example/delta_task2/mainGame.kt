@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
+
 import kotlinx.coroutines.delay
 
 @Composable
@@ -91,6 +92,12 @@ fun mainGame(navigate:()->Unit) {
         while (gameContinue.value && !gamePause.value) {
             delay(1000L)
             gameScore.value += 15
+        }
+    }
+    LaunchedEffect(gameContinue.value) {
+        delay(400L)
+        while (centreJerry.value<=80f){
+            centreJerry.value-=10f
         }
     }
     var delayTime = 10L
@@ -174,7 +181,9 @@ fun mainGame(navigate:()->Unit) {
         contentAlignment = Alignment.Center
     ) {
         Column(){
-            Trap()
+            if(conditionCheck.value==0) {
+                Trap()
+            }
             //PowerUps()
         }
 
@@ -238,15 +247,18 @@ fun mainGame(navigate:()->Unit) {
         if (count.value == 1) {
                 jumpSound.start()
         }
-            if (counter.value == 1 && counterUpdated.value) {
+            if (counter.value == 1 && counterUpdated.value ) {
                 if(jumpCounter.value==0){
                     hitSound.start()
                 }
-                centreTom.value = 300f
+                if(alreadyCounted.value==0) {
+                    centreTom.value = 300f
+                }
                 gameContinue.value = true
                 if (counterUpdated.value) {
                     counterUpdated.value = false
                 }
+                alreadyCounted.value=1
             } else if (counter.value == 2) {
                 hitSound.start()
                 centreTom.value = centreJerry.value + 50f
@@ -405,18 +417,19 @@ fun mainGame(navigate:()->Unit) {
 
             Column(
                 modifier = Modifier
-                    .offset(250.dp, -250.dp)
+                    .offset(250.dp, -200.dp)
                     .fillMaxSize()
             ) {
                 Card(shape = CircleShape,
                     modifier = Modifier
                         .size(height = 60.dp, width = 60.dp)
                         .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
-                    colors = CardDefaults.cardColors(Color.White)) {
-                    Text(text = (counter.value).toString(),
+                    colors = CardDefaults.cardColors(Color.Red)) {
+                    Text(text = (delayObstacle.value).toString(),
                         fontSize = 20.sp,
                         modifier=Modifier
-                            .offset(20.dp,15.dp))
+                            .offset(20.dp,15.dp)
+                    )
                 }
             }
         }
