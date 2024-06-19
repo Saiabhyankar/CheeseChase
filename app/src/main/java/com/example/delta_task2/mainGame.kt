@@ -9,9 +9,12 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,6 +55,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -76,9 +80,13 @@ fun mainGame(navigate:()->Unit) {
     var initialRadius = 50f
     var context1 = LocalContext.current
     var context2 = LocalContext.current
+    var context3= LocalContext.current
     var jumpSound = remember { MediaPlayer.create(context1, R.raw.jump_jerry) }
     var hitSound = remember {
         MediaPlayer.create(context2, R.raw.obstacle_hit)
+    }
+    var achievement = remember {
+        MediaPlayer.create(context3, R.raw.obstacle_hit)
     }
     if (track.value == 0 && initialTrack.value == 1) {
         xc.value = -375f
@@ -115,12 +123,16 @@ fun mainGame(navigate:()->Unit) {
         }
     }
     ObstacleMove()
-    //MoveJerry()
     val targetRadius = if (count.value == 1) 100f else initialRadius
     val animatedRadius by animateFloatAsState(
         targetValue = targetRadius,
         animationSpec = tween(durationMillis = 400)
     )
+    val animatedXc by animateFloatAsState(
+        targetValue = xc.value,
+        animationSpec = tween(durationMillis = 100)
+    )
+
     Surface(
         color = Color(54, 173, 207, 255),
         modifier = Modifier.fillMaxWidth()
@@ -142,32 +154,29 @@ fun mainGame(navigate:()->Unit) {
                         .height(1000.dp)
                 )
                 {
-                    Button(
-                        onClick = {
-                            initialTrack.value = track.value
-                            track.value = it
-                            if (initialTrack.value == track.value) {
-                                count.value = 1
-                            } else {
-                                count.value = 0
-                            }
-                        },
+                    Canvas(
                         modifier = Modifier
                             .height(5000.dp)
                             .width(100.dp)
-                            .offset(x = 10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(
-                                238,
-                                244,
-                                241,
-                                255
-                            )
-                        ),
-                        shape = RectangleShape
+                            .offset(x = 10.dp)
+                            .background(Color.White, shape = RoundedCornerShape(8.dp))
+                            .clickable {
+                                initialTrack.value = track.value
+                                track.value = it
+                                if (initialTrack.value == track.value) {
+                                    count.value = 1
+                                } else {
+                                    count.value = 0
+                                }
+                            }
                     ) {
+                        drawIntoCanvas {
+                            drawRect(
+                                color = Color.White ,
+                                size = size
+                            )
+                        }
                     }
-
                 }
             }
         }
@@ -181,10 +190,11 @@ fun mainGame(navigate:()->Unit) {
         contentAlignment = Alignment.Center
     ) {
         Column(){
+            KeyPowerUp()
             if(conditionCheck.value==0) {
                 Trap()
             }
-            //PowerUps()
+
         }
 
         Canvas(
@@ -220,18 +230,21 @@ fun mainGame(navigate:()->Unit) {
             drawCircle(
                 color = Color.Red,
                 radius = animatedRadius,
-                center = Offset(xc.value, centreJerry.value)
+                center = Offset(animatedXc, centreJerry.value)
             )
             drawCircle(
                 color = Color.Black,
                 radius = 90f,
                 center = Offset(
-                    xc.value, centreTom.value
+                    animatedXc, centreTom.value
                 )
             )
 
         }
-
+        if(powerUpUse.value==1){
+            achievement.start()
+            powerUpUse.value=0
+        }
         if(!isJump.value){
             jumpCounter.value=1
         }
@@ -247,6 +260,7 @@ fun mainGame(navigate:()->Unit) {
         if (count.value == 1) {
                 jumpSound.start()
         }
+
             if (counter.value == 1 && counterUpdated.value ) {
                 if(jumpCounter.value==0){
                     hitSound.start()
@@ -267,14 +281,14 @@ fun mainGame(navigate:()->Unit) {
                 if(!gameContinue.value) {
                     AlertDialog(onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ },
                         modifier = Modifier
-                            .size(500.dp),
+                            .size(800.dp),
                         text = {
                             Column {
                                 Text(
                                     text = "GameOver\n\nTom wins",
                                     fontFamily = customFontFamily,
                                     modifier = Modifier
-                                        .offset(70.dp, -10.dp),
+                                        .offset(70.dp, 30.dp),
                                     fontSize = 32.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -286,16 +300,51 @@ fun mainGame(navigate:()->Unit) {
                                     painter = painter1, contentDescription = "tomWin",
                                     modifier = Modifier
                                         .size(height = 120.dp, width = 120.dp)
-                                        .offset(80.dp, -40.dp)
+                                        .offset(80.dp, 0.dp)
                                 )
                                 Spacer(modifier = Modifier.padding(16.dp))
                                 Box(
                                     modifier = Modifier
-                                        .offset(50.dp, -20.dp)
-                                        .size(height = 500.dp, width = 250.dp)
+                                        .offset(50.dp, 120.dp)
+                                        .size(height = 700.dp, width = 250.dp)
                                 ) {
                                     Column(Modifier.fillMaxSize()) {
                                         PlayAgain()
+                                        Spacer(modifier = Modifier.padding(16.dp))
+                                        if(keyCount.value>0){
+                                            if(continueButton.value) {
+                                                AlertDialog(
+                                                    onDismissRequest = { continueButton.value = false },
+                                                    confirmButton = { /*TODO*/ },
+                                                    text = {
+                                                        Text(
+                                                            "You Have ${keyCount.value} Key Left",
+                                                            color = Color.Black,
+                                                            fontWeight = FontWeight.ExtraBold,
+                                                            fontSize = 24.sp
+                                                        )
+                                                    })
+                                            }
+                                        Button(onClick = {
+                                                            gameContinue.value=true
+                                                            counter.value=0
+                                                            count.value=0
+                                                            isJump.value=true
+                                                            counterUpdated.value=false
+                                                            alreadyCounted.value=0
+                                                            delayObstacle.value=5L
+                                                            powerUpUse.value+=1
+                                                            keyCount.value-=1
+                                                            centreTom.value+=50f
+                                                            centreJerry.value+=10f
+                                                         },
+                                            modifier = Modifier
+                                                .size(height=80.dp,width=180.dp)) {
+                                            Text(text = "Continue \n Playing",
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold)
+                                        }
+                                            }
                                         Spacer(modifier = Modifier.padding(16.dp))
                                         Button(
                                             onClick = { navigate()
@@ -317,7 +366,11 @@ fun mainGame(navigate:()->Unit) {
                                                 gamePause.value=false
                                                 powerUp.value=-40f
                                                 targetTrap.value=1440f
-                                                conditionCheck.value=0},
+                                                conditionCheck.value=0
+                                                alreadyCounted.value=0
+                                                targetObstacle.value=1050f
+                                                delayObstacle.value=10L
+                                                powerUpUse.value=0},
 
                                             modifier = Modifier
                                                 .size(height = 60.dp, width = 180.dp)
@@ -395,6 +448,10 @@ fun mainGame(navigate:()->Unit) {
                                                 powerUp.value=-40f
                                                 targetTrap.value=1440f
                                                 conditionCheck.value=0
+                                                alreadyCounted.value=0
+                                                targetObstacle.value=1050f
+                                                delayObstacle.value=10L
+                                                powerUpUse.value=0
                                             },
                                             modifier = Modifier
                                                 .size(height = 60.dp, width = 180.dp)
@@ -424,12 +481,15 @@ fun mainGame(navigate:()->Unit) {
                     modifier = Modifier
                         .size(height = 60.dp, width = 60.dp)
                         .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
-                    colors = CardDefaults.cardColors(Color.Red)) {
-                    Text(text = (delayObstacle.value).toString(),
+
+                    colors = CardDefaults.cardColors(Color.Black)) {
+                    Text(text = (gameScore.value).toString(),
                         fontSize = 20.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.ExtraBold,
                         modifier=Modifier
-                            .offset(20.dp,15.dp)
-                    )
+                            .offset(20.dp,15.dp))
+
                 }
             }
         }

@@ -50,7 +50,13 @@ var alreadyCounted=
 var helpClick=
     mutableStateOf(false)
 var delayObstacle=
-    mutableStateOf(10L)
+    mutableStateOf(5L)
 var targetObstacle=
     mutableStateOf(1050f)
+var keyCount=
+    mutableStateOf(0)
+var powerUpUse=
+    mutableStateOf(0)
+var continueButton=
+    mutableStateOf(false)
 

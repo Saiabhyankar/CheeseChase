@@ -28,7 +28,7 @@ fun Trap(){
     fun checkTrapCollision(){
         var numRandom= listOf(1,2,3).random()
         for( i in 0..2) {
-            if( ((((centreJerry.value == (trapYCoord.value - 650f - (500 * 4* i).toFloat()) && track.value == 1) || (centreJerry.value == trapYCoord.value + 10f - (400 * 3* i).toFloat()) && track.value == 0)||(centreJerry.value==trapYCoord.value - 500 - (600 *2*i)) && track.value==2)) && conditionCheck.value==0
+            if( ((((centreJerry.value == (trapYCoord.value - (650+i*300).toFloat()- (500 * 4* i).toFloat()) && track.value == 1) || (centreJerry.value == trapYCoord.value + (10 +i*170).toFloat() - (400 * 3* i).toFloat()) && track.value == 0)||(centreJerry.value==trapYCoord.value - (500+i*230).toFloat() - (600 *2*i)) && track.value==2)) && conditionCheck.value==0
                 ) {
                 gamePause.value = true
                 if(numRandom==2 || numRandom==3) {
@@ -48,40 +48,34 @@ fun Trap(){
         }
     }
     var trap= painterResource(id = R.drawable.traps)
-    var delayTime=45L
-
     LaunchedEffect(gameContinue.value) {
-                delay(300L)
-            while(trapYCoord.value<=targetTrap.value&& gameContinue.value){
-                delay(0L)
-                trapYCoord.value+=10f
+            while (gameContinue.value){
+
                 checkTrapCollision()
-                delay(delayTime)
-                if(targetTrap.value== trapYCoord.value){
-                    targetTrap.value*=2
-                }
-                checkTrapCollision()
+
+                delay(10L)
             }
     }
+    checkTrapCollision()
     Column(){
         for(i in 0..2) {
             Image(
                 painter = trap, contentDescription = "Trap",
                 modifier = Modifier
                     .size(60.dp)
-                    .offset(y = (trapYCoord.value - 500 - (500 * 4* i)).dp)
+                    .offset(y = (trapYCoord.value - 500 - (500 * 4 * i)).dp)
             )
             Image(
                 painter = trap, contentDescription = "Trap",
                 modifier = Modifier
                     .size(60.dp)
-                    .offset(-130.dp, (trapYCoord.value + 100 - (400 * 3* i)).dp)
+                    .offset(-130.dp, (trapYCoord.value + 100 - (400 * 3 * i)).dp)
             )
             Image(
                 painter = trap, contentDescription = "Trap",
                 modifier = Modifier
                     .size(60.dp)
-                    .offset(130.dp, y = (trapYCoord.value - 500 - (600 *2*i)).dp)
+                    .offset(130.dp, y = (trapYCoord.value - 500 - (600 * 2 * i)).dp)
             )
         }
     }

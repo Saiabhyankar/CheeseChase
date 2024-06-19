@@ -35,6 +35,7 @@ fun PlayAgain(){
         alreadyCounted.value=0
         targetObstacle.value=1050f
         delayObstacle.value=10L
+        powerUpUse.value=0
     },
         modifier = Modifier
             .size(height=60.dp,width=180.dp)){
