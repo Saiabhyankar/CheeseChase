@@ -42,7 +42,8 @@ fun Help(){
     }
     if(helpAlert.value){
 
-            AlertDialog(onDismissRequest = { helpAlert.value=false }, confirmButton = { /*TODO*/ },
+            AlertDialog(onDismissRequest = { helpAlert.value=false
+                                           rulePage.value=true}, confirmButton = { /*TODO*/ },
                 modifier = Modifier
                     .size(1000.dp),
                 text={
