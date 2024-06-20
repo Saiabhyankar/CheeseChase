@@ -1,5 +1,6 @@
 package com.example.delta_task2
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -33,6 +35,7 @@ fun MainPage(navigateToGame:()->Unit){
         Font(R.font.playwrite, FontWeight.Normal),
         Font(R.font.playwrite, FontWeight.Bold)
     )
+    val context= LocalContext.current
     var image1 = painterResource(id = R.drawable.main1)
     Surface(
         color = Color(54,173,207,255),
@@ -64,7 +67,12 @@ fun MainPage(navigateToGame:()->Unit){
                     .offset(0.dp,-250.dp),
                 color = Color.Magenta
             )
-            Button(onClick = { navigateToGame() },
+            Button(onClick = {
+                if(rulePage.value){
+                navigateToGame() }
+                             else{
+                    Toast.makeText(context ,"Please Read The Rule Page", Toast.LENGTH_SHORT).show()
+                             }},
                 modifier = Modifier
                     .offset(25.dp, 300.dp)
                     .size(height = 60.dp, width = 160.dp),

@@ -47,8 +47,6 @@ var targetTrap =
     mutableStateOf(1440f)
 var alreadyCounted=
     mutableStateOf(0)
-var helpClick=
-    mutableStateOf(false)
 var delayObstacle=
     mutableStateOf(5L)
 var targetObstacle=
@@ -59,4 +57,9 @@ var powerUpUse=
     mutableStateOf(0)
 var continueButton=
     mutableStateOf(false)
-
+var keyUsed=
+    mutableStateOf(0)
+var helpAlert=
+    mutableStateOf(false)
+var rulePage=
+    mutableStateOf(false)

@@ -1,21 +1,17 @@
 package com.example.delta_task2
 
 import android.media.MediaPlayer
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
+
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.rememberInfiniteTransition
+
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,16 +23,16 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
+
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
+
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,19 +40,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
+
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.rotate
+
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.painter.BitmapPainter
+
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -75,6 +71,7 @@ fun mainGame(navigate:()->Unit) {
         Font(R.font.cavet, FontWeight.Normal),
         Font(R.font.cavet, FontWeight.Bold)
     )
+    var Keys= readFromSharedPreferences(LocalContext.current,"keycount","PowerUp")
     var painter1 = painterResource(id = R.drawable.tomwin)
     var painter2 = painterResource(id = R.drawable.jerrywin)
     var initialRadius = 50f
@@ -241,10 +238,6 @@ fun mainGame(navigate:()->Unit) {
             )
 
         }
-        if(powerUpUse.value==1){
-            achievement.start()
-            powerUpUse.value=0
-        }
         if(!isJump.value){
             jumpCounter.value=1
         }
@@ -311,14 +304,14 @@ fun mainGame(navigate:()->Unit) {
                                     Column(Modifier.fillMaxSize()) {
                                         PlayAgain()
                                         Spacer(modifier = Modifier.padding(16.dp))
-                                        if(keyCount.value>0){
+                                        if((keyCount.value>0 && keyUsed.value==0)||(keyCount.value>1 && keyUsed.value==1)){
                                             if(continueButton.value) {
                                                 AlertDialog(
                                                     onDismissRequest = { continueButton.value = false },
                                                     confirmButton = { /*TODO*/ },
                                                     text = {
                                                         Text(
-                                                            "You Have ${keyCount.value} Key Left",
+                                                            "You Have $Keys Key Left",
                                                             color = Color.Black,
                                                             fontWeight = FontWeight.ExtraBold,
                                                             fontSize = 24.sp
@@ -334,9 +327,15 @@ fun mainGame(navigate:()->Unit) {
                                                             alreadyCounted.value=0
                                                             delayObstacle.value=5L
                                                             powerUpUse.value+=1
-                                                            keyCount.value-=1
+                                                            if(keyUsed.value==0) {
+                                                                keyCount.value -= 1
+                                                            }
+                                                            else{
+                                                                keyCount.value-=2
+                                                            }
                                                             centreTom.value+=50f
                                                             centreJerry.value+=10f
+                                                            keyUsed.value=1
                                                          },
                                             modifier = Modifier
                                                 .size(height=80.dp,width=180.dp)) {

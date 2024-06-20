@@ -21,6 +21,6 @@ fun KeyPowerUp(){
                 .offset(x=-130.dp,y= (centreObstale.value-500f).dp))
         Image(painter = key, contentDescription = "PowerKey",
             modifier = Modifier.size(60.dp)
-                .offset(x=130.dp,y= (centreObstale.value-1200f).dp))
+                .offset(x=130.dp,y= (centreObstale.value-1500f).dp))
     }
 }

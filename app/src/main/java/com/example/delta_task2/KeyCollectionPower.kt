@@ -11,12 +11,11 @@ fun keyCollectionPower(){
     else if (track.value==0 && (centreJerry.value== centreObstale.value-500)){
         keyCount.value+=1
     }
-    else if (track.value==2 && (centreJerry.value== centreObstale.value-1200)){
+    else if (track.value==2 && (centreJerry.value== centreObstale.value-1500)){
         keyCount.value+=1
     }
     writeToSharedPref(LocalContext.current,"keycount", keyCount.value.toString(),"PowerUp")
     if(keyCount.value>=1){
-        powerUpUse.value=1
         continueButton.value=true
     }
 }
