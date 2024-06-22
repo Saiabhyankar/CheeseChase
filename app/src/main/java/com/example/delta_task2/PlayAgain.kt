@@ -38,6 +38,13 @@ fun PlayAgain(){
         powerUpUse.value=0
         keyUsed.value=0
         helpAlert.value=false
+        shieldY.value=-1000f
+        shieldCollided.value=false
+        shieldTimeRemaining.value=5
+        shieldDisappear.value=false
+        for(i in 0..2){
+            keyCollected[i]=false
+        }
     },
         modifier = Modifier
             .size(height=60.dp,width=180.dp)){

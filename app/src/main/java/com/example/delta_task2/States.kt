@@ -1,6 +1,7 @@
 package com.example.delta_task2
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,3 +64,15 @@ var helpAlert=
     mutableStateOf(false)
 var rulePage=
     mutableStateOf(false)
+var shieldY=
+    mutableStateOf(-1000f)
+var shieldTargetY=
+    mutableStateOf(500f)
+var shieldCollided=
+    mutableStateOf(false)
+var shieldTimeRemaining =
+    mutableStateOf(0)
+var shieldDisappear=
+    mutableStateOf(false)
+val keyCollected =
+    mutableStateListOf(false,false,false)

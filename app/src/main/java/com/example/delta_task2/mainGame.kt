@@ -40,8 +40,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +67,7 @@ import androidx.compose.ui.unit.sp
 
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun mainGame(navigate:()->Unit) {
@@ -71,20 +75,23 @@ fun mainGame(navigate:()->Unit) {
         Font(R.font.cavet, FontWeight.Normal),
         Font(R.font.cavet, FontWeight.Bold)
     )
+
+    val coroutineScope= rememberCoroutineScope()
+
     var Keys= readFromSharedPreferences(LocalContext.current,"keycount","PowerUp")
     var painter1 = painterResource(id = R.drawable.tomwin)
     var painter2 = painterResource(id = R.drawable.jerrywin)
     var initialRadius = 50f
     var context1 = LocalContext.current
     var context2 = LocalContext.current
-    var context3= LocalContext.current
+   // var context3= LocalContext.current
     var jumpSound = remember { MediaPlayer.create(context1, R.raw.jump_jerry) }
     var hitSound = remember {
         MediaPlayer.create(context2, R.raw.obstacle_hit)
     }
-    var achievement = remember {
-        MediaPlayer.create(context3, R.raw.obstacle_hit)
-    }
+//    var achievement = remember {
+//        MediaPlayer.create(context3, R.raw.obstacle_hit)
+//    }
     if (track.value == 0 && initialTrack.value == 1) {
         xc.value = -375f
 
@@ -93,6 +100,9 @@ fun mainGame(navigate:()->Unit) {
     } else if (track.value == 1) {
         xc.value = 0f
     }
+
+
+
     LaunchedEffect(gameContinue.value) {
         while (gameContinue.value && !gamePause.value) {
             delay(1000L)
@@ -119,7 +129,7 @@ fun mainGame(navigate:()->Unit) {
             }
         }
     }
-    ObstacleMove()
+
     val targetRadius = if (count.value == 1) 100f else initialRadius
     val animatedRadius by animateFloatAsState(
         targetValue = targetRadius,
@@ -186,14 +196,11 @@ fun mainGame(navigate:()->Unit) {
             .offset(y = 200.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(){
+            ObstacleMove()
             KeyPowerUp()
             if(conditionCheck.value==0) {
                 Trap()
             }
-
-        }
-
         Canvas(
             modifier = Modifier
                 .padding(1.dp)
@@ -238,6 +245,7 @@ fun mainGame(navigate:()->Unit) {
             )
 
         }
+        ShieldMove()
         if(!isJump.value){
             jumpCounter.value=1
         }
@@ -248,6 +256,25 @@ fun mainGame(navigate:()->Unit) {
                 jumpTrack.value = false
                 isJump.value = true
                 counterUpdated.value=false
+            }
+        }
+        if (shieldCollided.value) {
+            shieldTimeRemaining.value = 5
+            LaunchedEffect(gameContinue.value) {
+                coroutineScope.launch {
+                    for (i in 5 downTo 1) {
+                        delay(1000)
+                        shieldTimeRemaining.value = i - 1
+                    }
+                    if(counter.value>=1){
+                        counter.value-=1
+                    }
+                    shieldCollided.value = false
+                    shieldDisappear.value=true
+                }
+            }
+            Box(){
+                Text(text = "Shield Active")
             }
         }
         if (count.value == 1) {
@@ -336,6 +363,7 @@ fun mainGame(navigate:()->Unit) {
                                                             centreTom.value+=50f
                                                             centreJerry.value+=10f
                                                             keyUsed.value=1
+                                                            shieldCollided.value=false
                                                          },
                                             modifier = Modifier
                                                 .size(height=80.dp,width=180.dp)) {
