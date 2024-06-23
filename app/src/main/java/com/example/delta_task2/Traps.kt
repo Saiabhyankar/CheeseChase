@@ -24,8 +24,9 @@ fun Trap(){
     fun checkTrapCollision(){
         var numRandom= listOf(1,2,3).random()
         for( i in 0..1) {
-            if( ((((centreJerry.value == (trapYCoord.value - (550-(250*i)).toFloat()- (500 * 4* i).toFloat()) && track.value == 1) || (centreJerry.value == trapYCoord.value + ((100)*(i+1.5)).toFloat() - (400 * 3* i).toFloat()) && track.value == 0)||(centreJerry.value==trapYCoord.value - (400-(i*200)) - (600 *2*i)) && track.value==2)) && conditionCheck.value==0
-            ) {
+            if( ((((centreJerry.value == (trapYCoord.value - (550-(250*i)).toFloat()- (500 * 4* i).toFloat()) && track.value == 1) ||
+                        (centreJerry.value == trapYCoord.value + ((100)*(i+1.5)).toFloat() - (400 * 3* i).toFloat()) && track.value == 0)||
+                        (centreJerry.value==trapYCoord.value - (400-(i*200)) - (600 *2*i)) && track.value==2)) && conditionCheck.value==0 && !shieldCollided.value) {
                 gamePause.value = true
                 if(numRandom==2 || numRandom==3) {
                     counter.value += 1

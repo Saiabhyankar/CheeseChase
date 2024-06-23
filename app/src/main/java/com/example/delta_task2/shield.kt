@@ -20,13 +20,11 @@ import kotlinx.coroutines.delay
 @Composable
 fun ShieldMove(){
     var shield= painterResource(id = R.drawable.shield)
-    var shieldProb= listOf(1,2,3,4,5).random()
     var shieldX = remember{
         mutableStateOf(0f)
     }
     fun checkShield() {
-
-        if (shieldY.value+60f== centreJerry.value) {
+        if (shieldY.value+60f== centreJerry.value && track.value==1) {
             shieldY.value = centreJerry.value -60f
             shieldCollided.value = true
         }
@@ -40,7 +38,7 @@ fun ShieldMove(){
     } else if (track.value == 1) {
         shieldX.value = 0f
     }
- val animatedXc by animateFloatAsState(
+    val animatedXc by animateFloatAsState(
         targetValue = shieldX.value,
         animationSpec = tween(durationMillis = 100)
     )
