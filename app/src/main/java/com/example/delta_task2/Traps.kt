@@ -22,7 +22,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun Trap(){
     fun checkTrapCollision(){
-        var numRandom= listOf(1,2,3).random()
+        val numRandom= listOf(1,2,3).random()
         for( i in 0..1) {
             if( ((((centreJerry.value == (trapYCoord.value - (550-(250*i)).toFloat()- (500 * 4* i).toFloat()) && track.value == 1) ||
                         (centreJerry.value == trapYCoord.value + ((100)*(i+1.5)).toFloat() - (400 * 3* i).toFloat()) && track.value == 0)||

@@ -16,6 +16,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -65,7 +66,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 
 
 import kotlinx.coroutines.delay
@@ -73,22 +75,22 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun mainGame(navigate:()->Unit) {
+
     val customFontFamily = FontFamily(
         Font(R.font.cavet, FontWeight.Normal),
         Font(R.font.cavet, FontWeight.Bold)
     )
-
     val coroutineScope= rememberCoroutineScope()
-
-    var Keys= readFromSharedPreferences(LocalContext.current,"keycount","PowerUp")
-    var painter1 = painterResource(id = R.drawable.tomwin)
-    var painter2 = painterResource(id = R.drawable.jerrywin)
-    var initialRadius = 50f
-    var context1 = LocalContext.current
-    var context2 = LocalContext.current
+    GetLimit()
+    val keys= readFromSharedPreferences(LocalContext.current,"keycount","PowerUp")
+    val painter1 = painterResource(id = R.drawable.tomwin)
+    val painter2 = painterResource(id = R.drawable.jerrywin)
+    val initialRadius = 50f
+    val context1 = LocalContext.current
+    val context2 = LocalContext.current
     // var context3= LocalContext.current
-    var jumpSound = remember { MediaPlayer.create(context1, R.raw.jump_jerry) }
-    var hitSound = remember {
+    val jumpSound = remember { MediaPlayer.create(context1, R.raw.jump_jerry) }
+    val hitSound = remember {
         MediaPlayer.create(context2, R.raw.obstacle_hit)
     }
     if (track.value == 0 && initialTrack.value == 1) {
@@ -197,7 +199,6 @@ fun mainGame(navigate:()->Unit) {
             .offset(y = 200.dp),
         contentAlignment = Alignment.Center
     ) {
-
         DisposableEffect(gameContinue.value) {
             val listener: (GyroscopeData) -> Unit = { data ->
                 gyroscopeData = data
@@ -243,6 +244,9 @@ fun mainGame(navigate:()->Unit) {
         }
         ObstacleMove()
         KeyPowerUp()
+        Image(painter = rememberAsyncImagePainter(tomImageAddress), contentDescription = null,
+            modifier = Modifier.size(60.dp)
+                .aspectRatio(1f))
         if(conditionCheck.value==0) {
             Trap()
         }
@@ -281,13 +285,13 @@ fun mainGame(navigate:()->Unit) {
                 radius = animatedRadius,
                 center = Offset(animatedXc, centreJerry.value)
             )
-            drawCircle(
-                color = Color.Black,
-                radius = 90f,
-                center = Offset(
-                    animatedXc, centreTom.value
-                )
-            )
+//            drawCircle(
+//                color = Color.Black,
+//                radius = 90f,
+//                center = Offset(
+//                    animatedXc, centreTom.value
+//                )
+//            )
 
         }
         ShieldMove()
@@ -326,7 +330,7 @@ fun mainGame(navigate:()->Unit) {
             jumpSound.start()
         }
 
-        if (counter.value == 1 && counterUpdated.value ) {
+        if (counter.value >= 1 && counter.value< maxCollision.value && counterUpdated.value ) {
             if(jumpCounter.value==0){
                 hitSound.start()
             }
@@ -338,7 +342,7 @@ fun mainGame(navigate:()->Unit) {
                 counterUpdated.value = false
             }
             alreadyCounted.value=1
-        } else if (counter.value == 2) {
+        } else if (counter.value == maxCollision.value) {
             hitSound.start()
             centreTom.value = centreJerry.value + 50f
             gameContinue.value = false
@@ -383,7 +387,7 @@ fun mainGame(navigate:()->Unit) {
                                                 confirmButton = { /*TODO*/ },
                                                 text = {
                                                     Text(
-                                                        "You Have $Keys Key Left",
+                                                        "You Have $keys Key Left",
                                                         color = Color.Black,
                                                         fontWeight = FontWeight.ExtraBold,
                                                         fontSize = 24.sp
@@ -572,7 +576,7 @@ fun mainGame(navigate:()->Unit) {
                     .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
 
                 colors = CardDefaults.cardColors(Color.Black)) {
-                Text(text = (initialTrack.value).toString(),
+                Text(text = (tomImageAddress.value).toString(),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,

@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     composable("secondscreen") {
                         mainGame {
                             navController.navigate(
-                                "firstscreen"
+                                "firstscreen",
                             )
                         }
                     }
