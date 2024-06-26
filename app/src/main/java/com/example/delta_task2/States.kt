@@ -78,3 +78,4 @@ val keyCollected =
     mutableStateListOf(false,false,false)
 val maxCollision= mutableStateOf(0)
 var tomImageAddress=mutableStateOf("")
+var check= mutableStateOf(0)

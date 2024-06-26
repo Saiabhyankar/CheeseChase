@@ -81,7 +81,7 @@ fun mainGame(navigate:()->Unit) {
         Font(R.font.cavet, FontWeight.Bold)
     )
     val coroutineScope= rememberCoroutineScope()
-    GetLimit()
+
     val keys= readFromSharedPreferences(LocalContext.current,"keycount","PowerUp")
     val painter1 = painterResource(id = R.drawable.tomwin)
     val painter2 = painterResource(id = R.drawable.jerrywin)
@@ -294,6 +294,7 @@ fun mainGame(navigate:()->Unit) {
 //            )
 
         }
+        GetLimit()
         ShieldMove()
         if(!isJump.value){
             jumpCounter.value=1
@@ -576,7 +577,7 @@ fun mainGame(navigate:()->Unit) {
                     .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
 
                 colors = CardDefaults.cardColors(Color.Black)) {
-                Text(text = (tomImageAddress.value).toString(),
+                Text(text = (check.value).toString(),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,
