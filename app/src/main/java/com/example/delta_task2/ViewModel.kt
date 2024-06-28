@@ -20,8 +20,19 @@ import java.io.InputStream
 class ApiInteraction : ViewModel() {
     private val _obstacleCount = mutableStateOf(ObstacleState())
     val obstacleCount: State<ObstacleState> = _obstacleCount
+
     private val _imageTom = mutableStateOf(ImageTomState())
     val imageTom: State<ImageTomState> = _imageTom
+
+    private val _imageJerry = mutableStateOf(ImageJerryState())
+    val imageJerry: State<ImageJerryState> = _imageJerry
+
+
+    private val _imageObstacle = mutableStateOf(ImageObstacleState())
+    val imageObstacle: State<ImageObstacleState> = _imageObstacle
+
+//    private val _imageObstacle = mutableStateOf(ImageObstacleState())
+//    val imageObstacle: State<ImageObstacleState> = _imageObstacle
     init{
         fetchLimit()
     }
@@ -59,6 +70,42 @@ class ApiInteraction : ViewModel() {
                     error = "ERROR message ${e.message}"
                 )
             }
+            // TO GET THE IMAGE OF JERRY
+
+            try{
+                val response3:ResponseBody= obstacleRetrofit.getTom("jerry")
+                val inputStream:InputStream=response3.byteStream()
+                val bitmap:Bitmap=BitmapFactory.decodeStream(inputStream)
+                _imageJerry.value=_imageJerry.value.copy(
+                    bitmap=bitmap,
+                    loading = false,
+                    error = null
+                )
+            }catch(e:Exception){
+                _imageJerry.value=_imageJerry.value.copy(
+                    loading = false,
+                    error = "ERROR message ${e.message}"
+                )
+            }
+            //TO GET THE IMAGE OF OBSTACLE
+
+
+            try{
+                val response4:ResponseBody= obstacleRetrofit.getTom("obstacle")
+                val inputStream:InputStream=response4.byteStream()
+                val bitmap:Bitmap=BitmapFactory.decodeStream(inputStream)
+                _imageObstacle.value=_imageObstacle.value.copy(
+                    bitmap=bitmap,
+                    loading = false,
+                    error = null
+                )
+            }catch(e:Exception){
+                _imageObstacle.value=_imageObstacle.value.copy(
+                    loading = false,
+                    error = "ERROR message ${e.message}"
+                )
+            }
+
 
 
         }
@@ -74,6 +121,22 @@ class ApiInteraction : ViewModel() {
         val loading: Boolean = true,
         val error: String? = null
     )
+
+    data class ImageJerryState(
+        val bitmap: Bitmap? = null,
+        val loading: Boolean = true,
+        val error: String? = null
+    )
+
+    data class ImageObstacleState(
+        val bitmap: Bitmap? = null,
+        val loading: Boolean = true,
+        val error: String? = null
+    )
+
+//    data class ObstacleCourse(
+//        var
+//    )
 
 }
 

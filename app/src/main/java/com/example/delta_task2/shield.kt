@@ -42,9 +42,9 @@ fun ShieldMove(){
         targetValue = shieldX.value,
         animationSpec = tween(durationMillis = 100)
     )
-    LaunchedEffect(gameContinue.value) {
+    LaunchedEffect(gameContinue.value,check.value) {
         delay(1000)
-        while (gameContinue.value && shieldY.value <= shieldTargetY.value && !shieldCollided.value) {
+        while (gameContinue.value && shieldY.value <= shieldTargetY.value && !shieldCollided.value && check.value==0) {
             shieldY.value += 10f
             delay(10)
 

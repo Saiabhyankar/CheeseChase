@@ -1,5 +1,6 @@
 package com.example.delta_task2
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -21,13 +22,13 @@ var xc =
 var counter =
     mutableStateOf(0)
 var centreTom =
-    mutableStateOf(300f)
+    mutableStateOf(100f)
 var centreObstale =
-    mutableStateOf(120f)
+    mutableStateOf(300f)
 var counterUpdated=
     mutableStateOf(false)
 var centreJerry=
-    mutableStateOf(120f)
+    mutableStateOf(100f)
 var isJump =
     mutableStateOf(true)
 var jumpTrack=
@@ -77,5 +78,5 @@ var shieldDisappear=
 val keyCollected =
     mutableStateListOf(false,false,false)
 val maxCollision= mutableStateOf(0)
-var tomImageAddress=mutableStateOf("")
-var check= mutableStateOf(0)
+var check= mutableStateOf(2)
+

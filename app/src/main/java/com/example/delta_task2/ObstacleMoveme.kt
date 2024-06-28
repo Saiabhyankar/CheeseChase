@@ -14,12 +14,12 @@ import kotlinx.coroutines.delay
 @Composable
 fun ObstacleMove(){
 
-    var moveStepTom=10f
+    val moveStepTom=10f
 
     keyCollectionPower()
-    LaunchedEffect(gameContinue.value) {
+    LaunchedEffect(gameContinue.value,check.value) {
         delay(550L)
-            while (centreObstale.value <= targetObstacle.value && gameContinue.value) {
+            while (centreObstale.value <= targetObstacle.value && gameContinue.value && check.value==0 ) {
                 centreObstale.value += moveStepTom
                 trapYCoord.value += 5f
                 delay(delayObstacle.value)

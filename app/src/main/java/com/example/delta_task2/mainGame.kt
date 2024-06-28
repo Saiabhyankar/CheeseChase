@@ -56,6 +56,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 
@@ -75,17 +76,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun mainGame(navigate:()->Unit) {
-
     val customFontFamily = FontFamily(
         Font(R.font.cavet, FontWeight.Normal),
         Font(R.font.cavet, FontWeight.Bold)
     )
     val coroutineScope= rememberCoroutineScope()
-
     val keys= readFromSharedPreferences(LocalContext.current,"keycount","PowerUp")
     val painter1 = painterResource(id = R.drawable.tomwin)
     val painter2 = painterResource(id = R.drawable.jerrywin)
-    val initialRadius = 50f
     val context1 = LocalContext.current
     val context2 = LocalContext.current
     // var context3= LocalContext.current
@@ -93,39 +91,36 @@ fun mainGame(navigate:()->Unit) {
     val hitSound = remember {
         MediaPlayer.create(context2, R.raw.obstacle_hit)
     }
-    if (track.value == 0 && initialTrack.value == 1) {
-        xc.value = -375f
+    if (track.value == 0 && (initialTrack.value == 1|| initialTrack.value==0)) {
+        xc.value = -145f
 
-    } else if (track.value == 2 && initialTrack.value == 1) {
-        xc.value = 375f
+    } else if (track.value == 2 && (initialTrack.value == 1|| initialTrack.value==2)) {
+        xc.value = 145f
     } else if (track.value == 1) {
         xc.value = 0f
     }
-
-
-
-    LaunchedEffect(gameContinue.value) {
-        while (gameContinue.value && !gamePause.value) {
+    LaunchedEffect(gameContinue.value,check.value) {
+        while (gameContinue.value && !gamePause.value && check.value==0) {
             delay(1000L)
             gameScore.value += 15
         }
     }
-    LaunchedEffect(gameContinue.value) {
+    LaunchedEffect(gameContinue.value,check.value) {
         delay(400L)
-        while (centreJerry.value<=80f){
+        while (centreJerry.value<=80f && check.value==0){
             centreJerry.value-=10f
         }
     }
-    var delayTime = 10L
+    val delayTime = 10L
     val moveStepTom = 10f
     var targetTom = 750f
 
-    LaunchedEffect(gameContinue.value) {
+    LaunchedEffect(gameContinue.value, check.value) {
         delay(1000L)
-        while (centreTom.value <= targetTom && gameContinue.value && counter.value <= 1 ) {
+        while (centreTom.value <= targetTom && gameContinue.value && counter.value <= maxCollision.value && check.value==0) {
             centreTom.value += moveStepTom
             delay(delayTime)
-            if (centreTom.value == targetTom && gameContinue.value && counter.value <= 1) {
+            if (centreTom.value == targetTom && gameContinue.value && counter.value <= maxCollision.value) {
                 targetTom *= 2
             }
         }
@@ -133,16 +128,6 @@ fun mainGame(navigate:()->Unit) {
     val context = LocalContext.current
     val gyroscope = remember { AndroidGyroscope(context) }
     var gyroscopeData by remember { mutableStateOf(GyroscopeData(0f, 0f, 0f)) }
-    val targetRadius = if (count.value == 1) 100f else initialRadius
-    val animatedRadius by animateFloatAsState(
-        targetValue = targetRadius,
-        animationSpec = tween(durationMillis = 400)
-    )
-    val animatedXc by animateFloatAsState(
-        targetValue = xc.value,
-        animationSpec = tween(durationMillis = 100)
-    )
-
     Surface(
         color = Color(54, 173, 207, 255),
         modifier = Modifier.fillMaxWidth()
@@ -244,60 +229,16 @@ fun mainGame(navigate:()->Unit) {
         }
         ObstacleMove()
         KeyPowerUp()
-        Image(painter = rememberAsyncImagePainter(tomImageAddress), contentDescription = null,
-            modifier = Modifier.size(60.dp)
-                .aspectRatio(1f))
         if(conditionCheck.value==0) {
             Trap()
-        }
-        Canvas(
-            modifier = Modifier
-                .padding(1.dp)
-        ) {
-
-            for (i in 1..100) {
-                if(i%2==0||i%3==0 ) {
-                    drawRect(
-                        color = Color.Blue,
-                        topLeft = Offset(-50f, centreObstale.value - (350 * (2 * i + 1)).toFloat()),
-                        size = Size(100f, 100f),
-                    )
-                }
-                if (i % 2 == 0) {
-                    drawRect(
-                        color = Color.Blue,
-                        topLeft = Offset(-425f, centreObstale.value - (700 * i).toFloat()),
-                        size = Size(100f, 100f),
-                    )
-                }
-                if(i%2==0) {
-                    drawRect(
-                        color = Color.Blue,
-                        topLeft = Offset(320f, centreObstale.value - (700 * i).toFloat()),
-                        size = Size(100f, 100f),
-                    )
-                }
-
-            }
-
-            drawCircle(
-                color = Color.Red,
-                radius = animatedRadius,
-                center = Offset(animatedXc, centreJerry.value)
-            )
-//            drawCircle(
-//                color = Color.Black,
-//                radius = 90f,
-//                center = Offset(
-//                    animatedXc, centreTom.value
-//                )
-//            )
-
         }
         GetLimit()
         ShieldMove()
         if(!isJump.value){
             jumpCounter.value=1
+        }
+        else{
+            jumpCounter.value=0
         }
         jumpTrack.value= !isJump.value
         if(!isJump.value){
@@ -310,7 +251,7 @@ fun mainGame(navigate:()->Unit) {
         }
         if (shieldCollided.value) {
             shieldTimeRemaining.value = 5
-            LaunchedEffect(gameContinue.value) {
+            LaunchedEffect(gameContinue.value,check.value) {
                 coroutineScope.launch {
                     for (i in 5 downTo 1) {
                         delay(1000)
@@ -331,12 +272,12 @@ fun mainGame(navigate:()->Unit) {
             jumpSound.start()
         }
 
-        if (counter.value >= 1 && counter.value< maxCollision.value && counterUpdated.value ) {
+        if ((counter.value >= 1 && counter.value< maxCollision.value) && counterUpdated.value ) {
             if(jumpCounter.value==0){
                 hitSound.start()
             }
             if(alreadyCounted.value==0) {
-                centreTom.value = 300f
+                centreTom.value = 150f
             }
             gameContinue.value = true
             if (counterUpdated.value) {
@@ -456,7 +397,10 @@ fun mainGame(navigate:()->Unit) {
                                             shieldDisappear.value=false
                                             for(i in 0..2){
                                                 keyCollected[i]=false
-                                            }},
+                                            }
+                                            maxCollision.value=0
+                                            check.value=1
+                                                  },
 
                                         modifier = Modifier
                                             .size(height = 60.dp, width = 180.dp)
@@ -546,6 +490,8 @@ fun mainGame(navigate:()->Unit) {
                                             for(i in 0..2){
                                                 keyCollected[i]=false
                                             }
+                                            maxCollision.value=0
+                                            check.value=1
                                         },
                                         modifier = Modifier
                                             .size(height = 60.dp, width = 180.dp)
@@ -577,7 +523,7 @@ fun mainGame(navigate:()->Unit) {
                     .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
 
                 colors = CardDefaults.cardColors(Color.Black)) {
-                Text(text = (check.value).toString(),
+                Text(text = (gameScore.value).toString(),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,

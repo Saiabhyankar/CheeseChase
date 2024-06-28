@@ -45,6 +45,8 @@ fun PlayAgain(){
         for(i in 0..2){
             keyCollected[i]=false
         }
+        maxCollision.value=0
+        check.value=1
     },
         modifier = Modifier
             .size(height=60.dp,width=180.dp)){
