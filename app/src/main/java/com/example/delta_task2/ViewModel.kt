@@ -6,6 +6,7 @@ package com.example.delta_task2
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.compose.runtime.R
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -30,6 +31,9 @@ class ApiInteraction : ViewModel() {
 
     private val _imageObstacle = mutableStateOf(ImageObstacleState())
     val imageObstacle: State<ImageObstacleState> = _imageObstacle
+
+    private val _rewardPunish = mutableStateOf(RewardPunishment())
+    val rewardPunish: State<RewardPunishment> = _rewardPunish
 
 //    private val _imageObstacle = mutableStateOf(ImageObstacleState())
 //    val imageObstacle: State<ImageObstacleState> = _imageObstacle
@@ -105,6 +109,22 @@ class ApiInteraction : ViewModel() {
                     error = "ERROR message ${e.message}"
                 )
             }
+            //TO GET THE REWARDS/PUNISHMENT AFTER HITTING AN OBSTACLE
+            try{
+                val response5= obstacleRetrofit.getRewardPunish()
+                _rewardPunish.value=_rewardPunish.value.copy(
+                    type = response5.type,
+                    amount = response5.amount,
+                    process = response5.description,
+                    loading = false,
+                    error = null
+                )
+            }catch(e:Exception){
+                _rewardPunish.value=_rewardPunish.value.copy(
+                    loading = false,
+                    error = "ERROR message ${e.message}"
+                )
+            }
 
 
 
@@ -134,9 +154,13 @@ class ApiInteraction : ViewModel() {
         val error: String? = null
     )
 
-//    data class ObstacleCourse(
-//        var
-//    )
+    data class RewardPunishment(
+        val type:Int=0,
+        val amount:Int=0,
+        val process:String="",
+        val loading:Boolean=true,
+        val error:String?=null
+    )
 
 }
 

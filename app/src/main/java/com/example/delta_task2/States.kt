@@ -79,4 +79,7 @@ val keyCollected =
     mutableStateListOf(false,false,false)
 val maxCollision= mutableStateOf(0)
 var check= mutableStateOf(2)
+var type= mutableStateOf(5)
+var amount= mutableStateOf(5)
+var hitHindranceCheck = mutableStateOf(false)
 

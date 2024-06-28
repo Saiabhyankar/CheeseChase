@@ -20,8 +20,10 @@ interface ApiInterface {
     suspend fun getObstacleLimit():Obstacle
     // TO FETCH THE IMAGES OF TOM,JERRY AND OBSTACLE
     @GET("image")
-    suspend fun getTom(@Query("character") Object: String):ResponseBody
-
+    suspend fun getTom(@Query("character") images: String):ResponseBody
+    //TO GET REWARDS/PUNISHMENT AFTER HITTING A OBSTACLE OR TRAP
+    @GET("hitHindrance")
+    suspend fun getRewardPunish():HitHindrance
     @POST("obstacleCourse")
     suspend fun getObstacleCourse(@Body obstacleCourseRequest: ObstacleCourseRequest): Call<ObstacleCourseResponse>
 

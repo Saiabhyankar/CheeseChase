@@ -34,6 +34,7 @@ fun GetLimit(){
     val imageTomState by limitViewModel.imageTom
     val imageJerryState by limitViewModel.imageJerry
     val imageObstacleState by limitViewModel.imageObstacle
+    val rewardPunish by limitViewModel.rewardPunish
     val targetSize = if (count.value == 1) 180.dp else 120.dp
     val animatedSize by animateDpAsState(
         targetValue = targetSize,
@@ -97,10 +98,18 @@ fun GetLimit(){
 
             }
         }
+        if(rewardPunish.error==null){
+            hitHindrance(hindrance =HitHindrance(rewardPunish.type,rewardPunish.amount,rewardPunish.process))
+        }
     }
 
 
 fun obstacle(obstacle: Obstacle){
     maxCollision.value=obstacle.obstacleLimit
+}
+
+fun hitHindrance(hindrance: HitHindrance){
+    type.value=hindrance.type
+    amount.value=hindrance.amount
 }
 
