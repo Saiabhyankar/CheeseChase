@@ -19,6 +19,7 @@ import java.io.InputStream
 
 
 class ApiInteraction : ViewModel() {
+
     private val _obstacleCount = mutableStateOf(ObstacleState())
     val obstacleCount: State<ObstacleState> = _obstacleCount
 
@@ -35,8 +36,8 @@ class ApiInteraction : ViewModel() {
     private val _rewardPunish = mutableStateOf(RewardPunishment())
     val rewardPunish: State<RewardPunishment> = _rewardPunish
 
-//    private val _imageObstacle = mutableStateOf(ImageObstacleState())
-//    val imageObstacle: State<ImageObstacleState> = _imageObstacle
+    private val _course = mutableStateOf(Course())
+    val course: State<Course> = _course
     init{
         fetchLimit()
     }
@@ -125,7 +126,21 @@ class ApiInteraction : ViewModel() {
                     error = "ERROR message ${e.message}"
                 )
             }
-
+            //TO POST EXTENT VALUE AND GET LIST OF OBSTACLE TRACK
+                try{
+                    val request = ObstacleCourseRequest(extent.value)
+                    val response6= obstacleRetrofit.getObstacleCourse(request)
+                    _course.value=_course.value.copy(
+                        course=response6.obstacleCourse,
+                        loading = false,
+                        error = null
+                    )
+                }catch(e:Exception){
+                    _course.value=_course.value.copy(
+                        loading = false,
+                        error = "ERROR message ${e.message}"
+                    )
+                }
 
 
         }
@@ -160,6 +175,12 @@ class ApiInteraction : ViewModel() {
         val process:String="",
         val loading:Boolean=true,
         val error:String?=null
+    )
+
+    data class Course(
+        var course:List<String>? =null,
+        var loading:Boolean=true,
+        var error: String?=null
     )
 
 }

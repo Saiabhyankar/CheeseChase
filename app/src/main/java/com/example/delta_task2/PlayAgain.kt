@@ -47,6 +47,7 @@ fun PlayAgain(){
         }
         maxCollision.value=0
         check.value=1
+        hitHindranceCheck.value=false
     },
         modifier = Modifier
             .size(height=60.dp,width=180.dp)){

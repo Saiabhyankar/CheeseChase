@@ -22,7 +22,7 @@ var xc =
 var counter =
     mutableStateOf(0)
 var centreTom =
-    mutableStateOf(100f)
+    mutableStateOf(150f)
 var centreObstale =
     mutableStateOf(300f)
 var counterUpdated=
@@ -82,4 +82,13 @@ var check= mutableStateOf(2)
 var type= mutableStateOf(5)
 var amount= mutableStateOf(5)
 var hitHindranceCheck = mutableStateOf(false)
+var dist= mutableStateOf(0f)
+var changed = mutableStateOf(false)
+
+var extent= mutableStateOf(0)
+var path=mutableStateListOf("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",
+    "","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",
+    "","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",
+    "","","","","","","","","","")
+
 

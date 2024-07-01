@@ -14,5 +14,5 @@ data class HitHindrance(
         )
 
 data class ObstacleCourseResponse(
-    var obstacleCourse:List<String>
+    var obstacleCourse:List<String>?
 )

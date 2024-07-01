@@ -19,12 +19,15 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun GetLimit(){
+    extent.value= 100
+    val trapNew= painterResource(id = R.drawable.newtrap)
     val animatedXc by animateFloatAsState(
         targetValue = xc.value,
         animationSpec = tween(durationMillis = 100)
@@ -35,6 +38,7 @@ fun GetLimit(){
     val imageJerryState by limitViewModel.imageJerry
     val imageObstacleState by limitViewModel.imageObstacle
     val rewardPunish by limitViewModel.rewardPunish
+    val course by limitViewModel.course
     val targetSize = if (count.value == 1) 180.dp else 120.dp
     val animatedSize by animateDpAsState(
         targetValue = targetSize,
@@ -72,35 +76,54 @@ fun GetLimit(){
     }
 
     if(imageObstacleState.bitmap!=null && imageObstacleState.error==null){
+            var j = 0
+            for (i in path) {
+                when (i.lowercase()) {
+                    "m" -> {
+                        Image(
+                            bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .offset(0.dp, (centreObstale.value - (150 * (2 * j + 1))).dp)
+                                .size(100.dp)
+                        )
+                    }
+                    "l" -> {
+                        Image(
+                            bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .offset(-125.dp, (centreObstale.value - (400 * j)).dp)
+                                .size(100.dp)
+                        )
+                    }
+                    "r" -> {
+                        Image(
+                            bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .offset(120.dp, (centreObstale.value - (300 * j)).dp)
+                                .size(100.dp)
+                        )
+                    }
+                    "b"->{
+                        Image(painter = trapNew, contentDescription =null,
+                            modifier = Modifier
+                                .size(60.dp)
+                                .offset(x = 0.dp, y = trapYCoord.value.dp))
 
-            for (i in 1..100) {
-                if(i%2==0||i%3==0 ) {
-                   Image(bitmap = imageObstacleState.bitmap!!.asImageBitmap(), contentDescription = null,
-                       modifier = Modifier
-                           .offset(0.dp, (centreObstale.value - (350 * (2 * i + 1))).dp)
-                           .size(100.dp)
-                   )
+                    }
                 }
-                if (i % 2 == 0) {
-                    Image(bitmap = imageObstacleState.bitmap!!.asImageBitmap(), contentDescription = null,
-                        modifier = Modifier
-                            .offset(-125.dp, (centreObstale.value - (700 * i)).dp)
-                            .size(100.dp)
-                    )
-                }
-                if(i%2==0) {
-                    Image(bitmap = imageObstacleState.bitmap!!.asImageBitmap(), contentDescription = null,
-                        modifier = Modifier
-                            .offset(120.dp, (centreObstale.value - (700 * i)).dp)
-                            .size(100.dp)
-                    )
-                }
-
+                j += 1
             }
         }
-        if(rewardPunish.error==null){
+    if(rewardPunish.error==null){
             hitHindrance(hindrance =HitHindrance(rewardPunish.type,rewardPunish.amount,rewardPunish.process))
         }
+
+    if(course.error==null){
+        obstacleCourse(obstacleCourseResponse = ObstacleCourseResponse(course.course))
+    }
     }
 
 
@@ -111,5 +134,12 @@ fun obstacle(obstacle: Obstacle){
 fun hitHindrance(hindrance: HitHindrance){
     type.value=hindrance.type
     amount.value=hindrance.amount
+}
+
+fun obstacleCourse(obstacleCourseResponse: ObstacleCourseResponse){
+    for (i in 0..<extent.value){
+        path[i]= obstacleCourseResponse.obstacleCourse?.get(i).toString()
+    }
+
 }
 

@@ -25,7 +25,7 @@ interface ApiInterface {
     @GET("hitHindrance")
     suspend fun getRewardPunish():HitHindrance
     @POST("obstacleCourse")
-    suspend fun getObstacleCourse(@Body obstacleCourseRequest: ObstacleCourseRequest): Call<ObstacleCourseResponse>
+    suspend fun getObstacleCourse(@Body obstacleCourseRequest: ObstacleCourseRequest): ObstacleCourseResponse
 
 
 }

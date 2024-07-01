@@ -99,6 +99,10 @@ fun mainGame(navigate:()->Unit) {
     } else if (track.value == 1) {
         xc.value = 0f
     }
+    else{
+        xc.value=0f
+        track.value=1
+    }
     LaunchedEffect(gameContinue.value,check.value) {
         while (gameContinue.value && !gamePause.value && check.value==0) {
             delay(1000L)
@@ -231,10 +235,11 @@ fun mainGame(navigate:()->Unit) {
         ObstacleMove()
         KeyPowerUp()
         if(conditionCheck.value==0) {
-            Trap()
+            //Trap()
         }
+
         GetLimit()
-        ShieldMove()
+        //ShieldMove()
         if(!isJump.value){
             jumpCounter.value=1
         }
@@ -358,6 +363,8 @@ fun mainGame(navigate:()->Unit) {
                                             keyUsed.value=1
                                             shieldCollided.value=false
                                             shieldTimeRemaining.value=0
+                                            check.value=1
+                                            hitHindranceCheck.value=false
                                         },
                                             modifier = Modifier
                                                 .size(height=80.dp,width=180.dp)) {
@@ -402,6 +409,7 @@ fun mainGame(navigate:()->Unit) {
                                             }
                                             maxCollision.value=0
                                             check.value=1
+                                            hitHindranceCheck.value=false
                                                   },
 
                                         modifier = Modifier
@@ -525,7 +533,7 @@ fun mainGame(navigate:()->Unit) {
                     .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
 
                 colors = CardDefaults.cardColors(Color.Black)) {
-                Text(text = (type.value).toString()+(amount.value).toString(),
+                Text(text = path[0].toString(),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,
