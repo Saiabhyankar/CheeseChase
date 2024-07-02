@@ -73,6 +73,8 @@ import coil.compose.rememberAsyncImagePainter
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Composable
 fun mainGame(navigate:()->Unit) {
@@ -133,10 +135,19 @@ fun mainGame(navigate:()->Unit) {
     val context = LocalContext.current
     val gyroscope = remember { AndroidGyroscope(context) }
     var gyroscopeData by remember { mutableStateOf(GyroscopeData(0f, 0f, 0f)) }
-    Surface(
-        color = Color(54, 173, 207, 255),
-        modifier = Modifier.fillMaxWidth()
-    ) {}
+    if(Theme.value.lowercase()=="night"){
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = Color(55,0,179,255)
+        ) {}
+    }
+    else if(Theme.value.lowercase()=="day"){
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = Color(149, 210, 179)
+        ) {}
+    }
+
 
     Box(
         modifier = Modifier
@@ -172,7 +183,9 @@ fun mainGame(navigate:()->Unit) {
                     ) {
                         drawIntoCanvas {
                             drawRect(
-                                color = Color.White ,
+                                color = if(Theme.value.lowercase()=="night") Color(61, 194, 236)
+                                else if(Theme.value.lowercase()=="day") Color(216, 239, 211)
+                                else Color.White,
                                 size = size
                             )
                         }
@@ -239,6 +252,11 @@ fun mainGame(navigate:()->Unit) {
         }
 
         GetLimit()
+        Text(
+            RandomWord.value,
+            fontSize = 24.sp,
+            modifier = Modifier
+                .offset(0.dp,-200.dp))
         //ShieldMove()
         if(!isJump.value){
             jumpCounter.value=1
@@ -533,7 +551,7 @@ fun mainGame(navigate:()->Unit) {
                     .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
 
                 colors = CardDefaults.cardColors(Color.Black)) {
-                Text(text = path[0].toString(),
+                Text(text = gameScore.value.toString(),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,

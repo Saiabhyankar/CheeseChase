@@ -24,7 +24,7 @@ fun ObstacleMove(){
                 trapYCoord.value += 5f
                 delay(delayObstacle.value)
                 checkCollision()
-
+                checkWordCollision()
                 if (centreObstale.value == targetObstacle.value) {
                     targetObstacle.value *= 2
                     if (delayObstacle.value >= 2) {

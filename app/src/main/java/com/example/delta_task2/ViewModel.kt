@@ -16,6 +16,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import java.io.InputStream
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
 class ApiInteraction : ViewModel() {
@@ -38,6 +42,12 @@ class ApiInteraction : ViewModel() {
 
     private val _course = mutableStateOf(Course())
     val course: State<Course> = _course
+
+    private val _word = mutableStateOf(RandomWord())
+    val word: State<RandomWord> = _word
+
+    private val _theme = mutableStateOf(Theme())
+    val theme: State<Theme> = _theme
     init{
         fetchLimit()
     }
@@ -128,8 +138,8 @@ class ApiInteraction : ViewModel() {
             }
             //TO POST EXTENT VALUE AND GET LIST OF OBSTACLE TRACK
                 try{
-                    val request = ObstacleCourseRequest(extent.value)
-                    val response6= obstacleRetrofit.getObstacleCourse(request)
+                    val request1 = ObstacleCourseRequest(extent.value)
+                    val response6= obstacleRetrofit.getObstacleCourse(request1)
                     _course.value=_course.value.copy(
                         course=response6.obstacleCourse,
                         loading = false,
@@ -141,6 +151,40 @@ class ApiInteraction : ViewModel() {
                         error = "ERROR message ${e.message}"
                     )
                 }
+            //TO GET A RANDOM WORD FOR COLLECTION
+            try{
+                val request2 = RandomWordRequest(listOf(5,6,7,8,9,10).random())
+                val response7= obstacleRetrofit.getWord(request2)
+                _word.value=_word.value.copy(
+                    word=response7.word,
+                    loading = false,
+                    error = null
+                )
+            }catch(e:Exception){
+                _word.value=_word.value.copy(
+                    loading = false,
+                    error = "ERROR message ${e.message}"
+                )
+            }
+
+            //TO GET THE THEME
+
+            try{
+                val request3 = ThemeRequest(date = LocalDate.now().toString(),
+                    time = LocalTime.now().withNano(0).toString()
+                )
+                val response8 = obstacleRetrofit.getTheme(request3)
+                _theme.value=_theme.value.copy(
+                    theme = response8.theme,
+                    loading = false,
+                    error = null
+                )
+            }catch(e:Exception){
+                _theme.value=_theme.value.copy(
+                    loading = false,
+                    error = "ERROR message ${e.message}"
+                )
+            }
 
 
         }
@@ -183,6 +227,16 @@ class ApiInteraction : ViewModel() {
         var error: String?=null
     )
 
+    data class RandomWord(
+            var word:String?=null,
+            var loading:Boolean=true,
+            var error: String?=null
+            )
+    data class Theme(
+        val theme:String="",
+        var loading:Boolean=true,
+        var error: String?=null
+    )
 }
 
 

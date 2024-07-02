@@ -90,5 +90,10 @@ var path=mutableStateListOf("","","","","","","","","","","","","","","","","","
     "","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",
     "","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",
     "","","","","","","","","","")
-
+var RandomWord= mutableStateOf("")
+var isCollected=mutableStateListOf(
+    false,false,false,false,false,false,false,false,false,false
+)
+var Theme=mutableStateOf("")
+var randomWordIndex= mutableStateOf(0)
 

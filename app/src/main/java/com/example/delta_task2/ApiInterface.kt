@@ -27,5 +27,12 @@ interface ApiInterface {
     @POST("obstacleCourse")
     suspend fun getObstacleCourse(@Body obstacleCourseRequest: ObstacleCourseRequest): ObstacleCourseResponse
 
+    //TO GET THE WORD FOR COLLECTION DURING RUN
+    @POST("randomWord")
+    suspend fun getWord(@Body length:RandomWordRequest):RandomWordResponse
+
+    //TO GET THEME BASED ON DATE AND TIME
+    @POST("theme")
+    suspend fun getTheme(@Body themeRequest: ThemeRequest):ThemeResponse
 
 }

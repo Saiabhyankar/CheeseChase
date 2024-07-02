@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.util.rangeTo
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -39,6 +40,8 @@ fun GetLimit(){
     val imageObstacleState by limitViewModel.imageObstacle
     val rewardPunish by limitViewModel.rewardPunish
     val course by limitViewModel.course
+    val randomWord by limitViewModel.word
+    val theme by limitViewModel.theme
     val targetSize = if (count.value == 1) 180.dp else 120.dp
     val animatedSize by animateDpAsState(
         targetValue = targetSize,
@@ -124,7 +127,22 @@ fun GetLimit(){
     if(course.error==null){
         obstacleCourse(obstacleCourseResponse = ObstacleCourseResponse(course.course))
     }
+    if(randomWord.error==null){
+
+        var xc=listOf(-125,0,120).random().dp
+        randomWord(RandomWordResponse(randomWord.word))
+        Text(
+            text= RandomWord.value[randomWordIndex.value].toString(),
+            modifier =Modifier
+                .offset(y=centreObstale.value.dp-1000.dp)
+        )
+
     }
+    if(theme.error==null){
+        theme(themeResponse = ThemeResponse(theme.theme))
+    }
+
+}
 
 
 fun obstacle(obstacle: Obstacle){
@@ -141,5 +159,13 @@ fun obstacleCourse(obstacleCourseResponse: ObstacleCourseResponse){
         path[i]= obstacleCourseResponse.obstacleCourse?.get(i).toString()
     }
 
+}
+
+fun randomWord(randomWordResponse: RandomWordResponse){
+    RandomWord.value=randomWordResponse.word.toString()
+}
+
+fun theme(themeResponse: ThemeResponse){
+    Theme.value=themeResponse.theme
 }
 
