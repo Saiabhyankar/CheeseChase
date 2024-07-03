@@ -96,4 +96,5 @@ var isCollected=mutableStateListOf(
 )
 var Theme=mutableStateOf("")
 var randomWordIndex= mutableStateOf(0)
-
+var fetchAgain= mutableStateOf(false)
+var fetchCount= mutableStateOf(0)

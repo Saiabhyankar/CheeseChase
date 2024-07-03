@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -27,7 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun GetLimit(){
-    extent.value= 100
+    extent.value= 15
     val trapNew= painterResource(id = R.drawable.newtrap)
     val animatedXc by animateFloatAsState(
         targetValue = xc.value,
@@ -47,6 +48,11 @@ fun GetLimit(){
         targetValue = targetSize,
         animationSpec = tween(durationMillis = 400)
     )
+    LaunchedEffect(fetchAgain.value, fetchCount.value) {
+        if (((fetchAgain.value && fetchCount.value > 0) || fetchCount.value == 0) && gameContinue.value) {
+            limitViewModel.getObstacleCourseAgain()
+        }
+    }
     if(viewState1.error==null){
         obstacle(Obstacle(viewState1.limit))
     }
@@ -79,7 +85,8 @@ fun GetLimit(){
     }
 
     if(imageObstacleState.bitmap!=null && imageObstacleState.error==null){
-            var j = 0
+
+            var j=0
             for (i in path) {
                 when (i.lowercase()) {
                     "m" -> {
@@ -116,9 +123,17 @@ fun GetLimit(){
                                 .offset(x = 0.dp, y = trapYCoord.value.dp))
 
                     }
+//                    ""->{
+//                        if (gameContinue.value ){
+//                            fetchCount.value+=1
+//                            fetchAgain.value=true
+//                        }
+//                    }
+
                 }
-                j += 1
+                j+=1
             }
+
         }
     if(rewardPunish.error==null){
             hitHindrance(hindrance =HitHindrance(rewardPunish.type,rewardPunish.amount,rewardPunish.process))
@@ -131,11 +146,11 @@ fun GetLimit(){
 
         var xc=listOf(-125,0,120).random().dp
         randomWord(RandomWordResponse(randomWord.word))
-        Text(
-            text= RandomWord.value[randomWordIndex.value].toString(),
-            modifier =Modifier
-                .offset(y=centreObstale.value.dp-1000.dp)
-        )
+//        Text(
+//            text= RandomWord.value[randomWordIndex.value].toString(),
+//            modifier =Modifier
+//                .offset(y=centreObstale.value.dp-1000.dp)
+//        )
 
     }
     if(theme.error==null){
@@ -160,6 +175,7 @@ fun obstacleCourse(obstacleCourseResponse: ObstacleCourseResponse){
     }
 
 }
+
 
 fun randomWord(randomWordResponse: RandomWordResponse){
     RandomWord.value=randomWordResponse.word.toString()

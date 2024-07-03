@@ -14,17 +14,18 @@ fun rewardPunish() {
             delayObstacle.value /= ((amount.value) / 2)
         }
         else if (type.value == 2) {
-            LaunchedEffect(true) {
+            LaunchedEffect(type.value) {
                 coroutineScope.launch {
-                    count.value = 0
-                    for (i in amount.value until 0) {
+                    for (i in 0 until amount.value) {
+                        count.value = 1
                         Jump()
                         delay(1000L)
-                        count.value = 1
+                        count.value = 0
                     }
                 }
             }
-        } else if (type.value == 3) {
+        }
+        else if (type.value == 3) {
             // Ensure amount.value is not zero to avoid division by zero
             if (amount.value != 0) {
                 if (!changed.value) {

@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import java.io.InputStream
@@ -51,10 +52,17 @@ class ApiInteraction : ViewModel() {
     init{
         fetchLimit()
     }
+    init{
+        getObstacleCourseAgain()
+    }
+    fun getObstacleCourseAgain(){
+        if ((fetchAgain.value && fetchCount.value > 0) || fetchCount.value == 0) {
+            fetchObstacleCourse()
+        }
+    }
 
     private fun fetchLimit(){
         viewModelScope.launch {
-            Log.d(1.toString(),"StartedFetching")
             //TO GET THE OBSTACLE LIMIT
             try{
                 val response1= obstacleRetrofit.getObstacleLimit()
@@ -136,21 +144,7 @@ class ApiInteraction : ViewModel() {
                     error = "ERROR message ${e.message}"
                 )
             }
-            //TO POST EXTENT VALUE AND GET LIST OF OBSTACLE TRACK
-                try{
-                    val request1 = ObstacleCourseRequest(extent.value)
-                    val response6= obstacleRetrofit.getObstacleCourse(request1)
-                    _course.value=_course.value.copy(
-                        course=response6.obstacleCourse,
-                        loading = false,
-                        error = null
-                    )
-                }catch(e:Exception){
-                    _course.value=_course.value.copy(
-                        loading = false,
-                        error = "ERROR message ${e.message}"
-                    )
-                }
+
             //TO GET A RANDOM WORD FOR COLLECTION
             try{
                 val request2 = RandomWordRequest(listOf(5,6,7,8,9,10).random())
@@ -174,6 +168,7 @@ class ApiInteraction : ViewModel() {
                     time = LocalTime.now().withNano(0).toString()
                 )
                 val response8 = obstacleRetrofit.getTheme(request3)
+
                 _theme.value=_theme.value.copy(
                     theme = response8.theme,
                     loading = false,
@@ -189,7 +184,28 @@ class ApiInteraction : ViewModel() {
 
         }
     }
+    private fun fetchObstacleCourse(){
+        viewModelScope.launch {
 
+            //TO POST EXTENT VALUE AND GET LIST OF OBSTACLE TRACK
+            try{
+                val request1 = ObstacleCourseRequest(extent.value)
+                val response6= obstacleRetrofit.getObstacleCourse(request1)
+                _course.value=_course.value.copy(
+                    course=response6.obstacleCourse,
+                    loading = false,
+                    error = null
+                )
+            }catch(e:Exception){
+                _course.value=_course.value.copy(
+                    loading = false,
+                    error = "ERROR message ${e.message}"
+                )
+            }
+        }
+    }
+
+}
     data class ObstacleState(
         val limit: Int=2,
         val loading: Boolean = true,
@@ -237,7 +253,7 @@ class ApiInteraction : ViewModel() {
         var loading:Boolean=true,
         var error: String?=null
     )
-}
+
 
 
 
