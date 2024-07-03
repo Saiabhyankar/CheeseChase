@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.util.rangeTo
 
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun GetLimit(){
@@ -85,8 +86,7 @@ fun GetLimit(){
     }
 
     if(imageObstacleState.bitmap!=null && imageObstacleState.error==null){
-
-            var j=0
+        var j=0
             for (i in path) {
                 when (i.lowercase()) {
                     "m" -> {
@@ -94,7 +94,7 @@ fun GetLimit(){
                             bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
                             contentDescription = null,
                             modifier = Modifier
-                                .offset(0.dp, (centreObstale.value - (150 * (2 * j + 1))).dp)
+                                .offset(0.dp, (centreObstale.value - (150 * (2 * j+ 1))).dp)
                                 .size(100.dp)
                         )
                     }
@@ -103,7 +103,7 @@ fun GetLimit(){
                             bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
                             contentDescription = null,
                             modifier = Modifier
-                                .offset(-125.dp, (centreObstale.value - (400 * j)).dp)
+                                .offset(-125.dp, (centreObstale.value - (400 *j)).dp)
                                 .size(100.dp)
                         )
                     }
@@ -123,15 +123,16 @@ fun GetLimit(){
                                 .offset(x = 0.dp, y = trapYCoord.value.dp))
 
                     }
-//                    ""->{
-//                        if (gameContinue.value ){
-//                            fetchCount.value+=1
-//                            fetchAgain.value=true
-//                        }
-//                    }
+                    ""->{
+                        if (gameContinue.value ){
+                            reFetch.value=true
+                            fetchCount.value=1
+                            fetchAgain.value=true
+                        }
+                    }
 
                 }
-                j+=1
+                j++
             }
 
         }
@@ -170,9 +171,11 @@ fun hitHindrance(hindrance: HitHindrance){
 }
 
 fun obstacleCourse(obstacleCourseResponse: ObstacleCourseResponse){
-    for (i in 0..<extent.value){
-        path[i]= obstacleCourseResponse.obstacleCourse?.get(i).toString()
-    }
+    for(i in 0 .rangeUntil(extent.value) ){
+            path[i]=(obstacleCourseResponse.obstacleCourse?.get(i).toString())
+        }
+
+
 
 }
 

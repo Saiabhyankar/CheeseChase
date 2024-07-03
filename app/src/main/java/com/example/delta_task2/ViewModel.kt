@@ -56,9 +56,7 @@ class ApiInteraction : ViewModel() {
         getObstacleCourseAgain()
     }
     fun getObstacleCourseAgain(){
-        if ((fetchAgain.value && fetchCount.value > 0) || fetchCount.value == 0) {
-            fetchObstacleCourse()
-        }
+        fetchObstacleCourse()
     }
 
     private fun fetchLimit(){
