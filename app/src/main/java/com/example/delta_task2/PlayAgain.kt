@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +49,11 @@ fun PlayAgain(){
         maxCollision.value=0
         check.value=1
         hitHindranceCheck.value=false
+
+        dist.value=0f
+        changed.value =false
+        fetchCount.value=0
+        fetchAgain.value=false
     },
         modifier = Modifier
             .size(height=60.dp,width=180.dp)){

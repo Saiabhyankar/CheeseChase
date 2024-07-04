@@ -24,7 +24,7 @@ var counter =
 var centreTom =
     mutableStateOf(150f)
 var centreObstale =
-    mutableStateOf(300f)
+    mutableStateOf(150f)
 var counterUpdated=
     mutableStateOf(false)
 var centreJerry=
@@ -81,6 +81,7 @@ val maxCollision= mutableStateOf(0)
 var check= mutableStateOf(2)
 var type= mutableStateOf(5)
 var amount= mutableStateOf(5)
+var description= mutableStateOf("")
 var hitHindranceCheck = mutableStateOf(false)
 var dist= mutableStateOf(0f)
 var changed = mutableStateOf(false)
@@ -95,8 +96,8 @@ var isCollected=mutableStateListOf(
     false,false,false,false,false,false,false,false,false,false
 )
 var Theme=mutableStateOf("")
-var randomWordIndex= mutableStateOf(0)
+//var randomWordIndex= mutableStateOf(0)
 var fetchAgain= mutableStateOf(false)
 var fetchCount= mutableStateOf(0)
-var reFetch=mutableStateOf(false)
-var iterator=mutableStateOf(0)
+var reFetch=mutableStateOf(0)
+var pos= mutableStateOf(0)

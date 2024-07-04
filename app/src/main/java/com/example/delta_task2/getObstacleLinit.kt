@@ -50,9 +50,14 @@ fun GetLimit(){
         animationSpec = tween(durationMillis = 400)
     )
     LaunchedEffect(fetchAgain.value, fetchCount.value) {
-        if (((fetchAgain.value && fetchCount.value > 0) || fetchCount.value == 0) && gameContinue.value) {
+        delay(5000L)
+        if (((fetchAgain.value && fetchCount.value ==1 && gameContinue.value) || fetchCount.value == 0) ) {
+            reFetch.value=1
+            delay(1)
             limitViewModel.getObstacleCourseAgain()
+
         }
+
     }
     if(viewState1.error==null){
         obstacle(Obstacle(viewState1.limit))
@@ -124,15 +129,16 @@ fun GetLimit(){
 
                     }
                     ""->{
-                        if (gameContinue.value ){
-                            reFetch.value=true
+                        if (gameContinue.value){
                             fetchCount.value=1
                             fetchAgain.value=true
+
                         }
                     }
 
                 }
-                j++
+                if(j<=100){
+                j++}
             }
 
         }
@@ -147,12 +153,6 @@ fun GetLimit(){
 
         var xc=listOf(-125,0,120).random().dp
         randomWord(RandomWordResponse(randomWord.word))
-//        Text(
-//            text= RandomWord.value[randomWordIndex.value].toString(),
-//            modifier =Modifier
-//                .offset(y=centreObstale.value.dp-1000.dp)
-//        )
-
     }
     if(theme.error==null){
         theme(themeResponse = ThemeResponse(theme.theme))
@@ -168,15 +168,16 @@ fun obstacle(obstacle: Obstacle){
 fun hitHindrance(hindrance: HitHindrance){
     type.value=hindrance.type
     amount.value=hindrance.amount
+    description.value=hindrance.description
 }
 
 fun obstacleCourse(obstacleCourseResponse: ObstacleCourseResponse){
-    for(i in 0 .rangeUntil(extent.value) ){
-            path[i]=(obstacleCourseResponse.obstacleCourse?.get(i).toString())
-        }
+    for(i in 0..<100){
+            if(i< extent.value) {
+                path[i] = (obstacleCourseResponse.obstacleCourse?.get(i).toString())
+            }
 
-
-
+    }
 }
 
 

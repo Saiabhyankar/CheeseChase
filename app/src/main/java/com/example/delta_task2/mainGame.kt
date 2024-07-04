@@ -193,6 +193,9 @@ fun mainGame(navigate:()->Unit) {
                 }
             }
         }
+        Text(text= description.value,
+            fontSize = 24.sp,
+            color = Color.Blue)
     }
     Jump()
     Box(
@@ -551,7 +554,7 @@ fun mainGame(navigate:()->Unit) {
                     .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
 
                 colors = CardDefaults.cardColors(Color.Black)) {
-                Text(text = iterator.value.toString(),
+                Text(text = reFetch.value.toString(),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,

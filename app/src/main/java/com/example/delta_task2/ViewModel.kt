@@ -53,10 +53,13 @@ class ApiInteraction : ViewModel() {
         fetchLimit()
     }
     init{
-        getObstacleCourseAgain()
+        fetchObstacleCourse()
     }
     fun getObstacleCourseAgain(){
-        fetchObstacleCourse()
+            fetchObstacleCourse()
+            fetchAgain.value=false
+            fetchCount.value=0
+
     }
 
     private fun fetchLimit(){
@@ -184,7 +187,6 @@ class ApiInteraction : ViewModel() {
     }
     private fun fetchObstacleCourse(){
         viewModelScope.launch {
-
             //TO POST EXTENT VALUE AND GET LIST OF OBSTACLE TRACK
             try{
                 val request1 = ObstacleCourseRequest(extent.value)
