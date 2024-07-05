@@ -3,6 +3,7 @@ package com.example.delta_task2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -14,33 +15,28 @@ fun rewardPunish() {
             delayObstacle.value /= ((amount.value) / 2)
         }
         else if (type.value == 2) {
-            LaunchedEffect(type.value) {
-                coroutineScope.launch {
-                    for (i in 0 until amount.value) {
-                        count.value = 1
-                        Jump()
-                        delay(1000L)
-                        count.value = 0
+            if(centreJerry.value- centreObstale.value<50f &&((track.value==0 && xCord.value==-125.dp)||(track.value==1 && xCord.value==0.dp)||(track.value==2 && xCord.value==120.dp))) {
+                LaunchedEffect(type.value) {
+                    coroutineScope.launch {
+                        for (i in 0 until amount.value) {
+                            count.value = 1
+                            Jump()
+                            delay(1000L)
+                            count.value = 0
+                        }
                     }
                 }
             }
         }
         else if (type.value == 3) {
-            // Ensure amount.value is not zero to avoid division by zero
             if (amount.value != 0) {
                 if (!changed.value) {
                     dist.value = centreTom.value - centreJerry.value
-                    // Calculate the distance to reduce in each step
                     val stepDistance = dist.value / amount.value
-
-                    // Move Tom towards Jerry step by step
-
                     centreTom.value -= stepDistance
-                    // Check if Tom has reached or crossed Jerry
                     if (centreTom.value <= centreJerry.value+50f) {
                         centreTom.value = centreJerry.value+50f
                         counter.value = maxCollision.value
-
                     }
                     changed.value=true
                 }

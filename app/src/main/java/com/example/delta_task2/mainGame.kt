@@ -251,7 +251,7 @@ fun mainGame(navigate:()->Unit) {
         ObstacleMove()
         KeyPowerUp()
         if(conditionCheck.value==0) {
-            //Trap()
+            Trap()
         }
 
         GetLimit()
@@ -260,7 +260,7 @@ fun mainGame(navigate:()->Unit) {
             fontSize = 24.sp,
             modifier = Modifier
                 .offset(0.dp,-200.dp))
-        //ShieldMove()
+        ShieldMove()
         if(!isJump.value){
             jumpCounter.value=1
         }
@@ -431,6 +431,10 @@ fun mainGame(navigate:()->Unit) {
                                             maxCollision.value=0
                                             check.value=1
                                             hitHindranceCheck.value=false
+                                            dist.value=0f
+                                            changed.value =false
+                                            fetchCount.value=0
+                                            fetchAgain.value=false
                                                   },
 
                                         modifier = Modifier
@@ -554,7 +558,7 @@ fun mainGame(navigate:()->Unit) {
                     .border(3.dp, color = Color(255, 195, 0), shape = CircleShape),
 
                 colors = CardDefaults.cardColors(Color.Black)) {
-                Text(text = reFetch.value.toString(),
+                Text(text = gameScore.value.toString(),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,

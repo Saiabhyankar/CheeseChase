@@ -29,7 +29,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun GetLimit(){
-    extent.value= 15
+    extent.value= 10
     val trapNew= painterResource(id = R.drawable.newtrap)
     val animatedXc by animateFloatAsState(
         targetValue = xc.value,
@@ -50,10 +50,10 @@ fun GetLimit(){
         animationSpec = tween(durationMillis = 400)
     )
     LaunchedEffect(fetchAgain.value, fetchCount.value) {
-        delay(5000L)
+        delay(8000L)
         if (((fetchAgain.value && fetchCount.value ==1 && gameContinue.value) || fetchCount.value == 0) ) {
             reFetch.value=1
-            delay(1)
+            centreObstale.value=300f
             limitViewModel.getObstacleCourseAgain()
 
         }
@@ -89,6 +89,12 @@ fun GetLimit(){
                     .aspectRatio(1f))
 
     }
+    if(course.loading){
+        check.value=1
+    }
+    else{
+        check.value=0
+    }
 
     if(imageObstacleState.bitmap!=null && imageObstacleState.error==null){
         var j=0
@@ -99,27 +105,30 @@ fun GetLimit(){
                             bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
                             contentDescription = null,
                             modifier = Modifier
-                                .offset(0.dp, (centreObstale.value - (150 * (2 * j+ 1))).dp)
+                                .offset(obstacleX[0], (centreObstale.value - (150 * (2 * j+ 1))).dp)
                                 .size(100.dp)
                         )
+                        xCord.value= obstacleX[0]
                     }
                     "l" -> {
                         Image(
                             bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
                             contentDescription = null,
                             modifier = Modifier
-                                .offset(-125.dp, (centreObstale.value - (400 *j)).dp)
+                                .offset(obstacleX[1], (centreObstale.value - (400 *j)).dp)
                                 .size(100.dp)
                         )
+                        xCord.value= obstacleX[1]
                     }
                     "r" -> {
                         Image(
                             bitmap = imageObstacleState.bitmap!!.asImageBitmap(),
                             contentDescription = null,
                             modifier = Modifier
-                                .offset(120.dp, (centreObstale.value - (300 * j)).dp)
+                                .offset(obstacleX[2], (centreObstale.value - (300 * j)).dp)
                                 .size(100.dp)
                         )
+                        xCord.value= obstacleX[2]
                     }
                     "b"->{
                         Image(painter = trapNew, contentDescription =null,
@@ -148,11 +157,6 @@ fun GetLimit(){
 
     if(course.error==null){
         obstacleCourse(obstacleCourseResponse = ObstacleCourseResponse(course.course))
-    }
-    if(randomWord.error==null){
-
-        var xc=listOf(-125,0,120).random().dp
-        randomWord(RandomWordResponse(randomWord.word))
     }
     if(theme.error==null){
         theme(themeResponse = ThemeResponse(theme.theme))

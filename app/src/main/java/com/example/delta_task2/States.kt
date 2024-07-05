@@ -1,11 +1,10 @@
 package com.example.delta_task2
 
-import android.graphics.Bitmap
-import androidx.compose.runtime.getValue
+
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+
+import androidx.compose.ui.unit.dp
 
 var count =
     mutableStateOf(0)
@@ -92,12 +91,10 @@ var path=mutableStateListOf("","","","","","","","","","","","","","","","","","
     "","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",
     "","","","","","","","","","")
 var RandomWord= mutableStateOf("")
-var isCollected=mutableStateListOf(
-    false,false,false,false,false,false,false,false,false,false
-)
 var Theme=mutableStateOf("")
-//var randomWordIndex= mutableStateOf(0)
+
 var fetchAgain= mutableStateOf(false)
 var fetchCount= mutableStateOf(0)
 var reFetch=mutableStateOf(0)
-var pos= mutableStateOf(0)
+var obstacleX= listOf(0.dp,-125.dp,120.dp)
+var xCord=mutableStateOf(1.dp)

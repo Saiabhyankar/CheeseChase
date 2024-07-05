@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +51,8 @@ fun MainPage(navigateToGame:()->Unit){
 
             Image(painter = image1, contentDescription = "GameTheme",
                 modifier = Modifier
-                    .size(250.dp))
+                    .size(250.dp)
+                    .offset(x=30.dp))
             writeHighScore()
             Help()
         }
@@ -62,7 +64,8 @@ fun MainPage(navigateToGame:()->Unit){
             Text("Cheese Chase",
                 fontStyle = FontStyle.Italic,
                 fontFamily=customFontFamily,
-                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
                 modifier = Modifier
                     .offset(0.dp,-250.dp),
                 color = Color.Magenta
@@ -74,12 +77,14 @@ fun MainPage(navigateToGame:()->Unit){
                     Toast.makeText(context ,"Please Read The Rule Page", Toast.LENGTH_SHORT).show()
                              }},
                 modifier = Modifier
-                    .offset(25.dp, 300.dp)
-                    .size(height = 60.dp, width = 160.dp),
+                    .offset(55.dp, 300.dp)
+                    .size(height = 60.dp, width = 160.dp)
+                    .border(5.dp, color = Color(0,128,138), shape = RoundedCornerShape(100)),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta) ) {
                 Text("Start",
                     fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Cyan)
             }
         }
     }
